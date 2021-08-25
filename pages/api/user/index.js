@@ -1,10 +1,11 @@
 import Session from "../../../lib/Session";
 
-export default Session(({session}, res) => {
+export default Session(async({session}, res) => {
   let user = session.get("user");
   let votes = session.get("votes");
   if (!user) {
-    user = {isLoggedIn: false}
+    session.set("user", {isLoggedIn: false});
+    await session.save();
   }
   if (!votes) {
     votes = {}
