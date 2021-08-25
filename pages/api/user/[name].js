@@ -9,7 +9,7 @@ export default Session((req, res) => {
   if (user_cookie?.isLoggedIn && user_cookie?.name === name) {
     switch(method) {
       case "PATCH":
-        User.findOne({name}, async(err, user) => {
+        User.findOne({name}, (err, user) => {
           if (err) {
             res.status(500).json(err);
           } else if (!user) {
@@ -24,8 +24,6 @@ export default Session((req, res) => {
                 isLoggedIn: true,
                 name: user.name
               }
-              session.set("user", json);
-              await session.save();
               let votes = session.get("votes");
               if (!votes) {
                 votes = {}
@@ -34,10 +32,12 @@ export default Session((req, res) => {
             } else {
               json = {isLoggedIn: true}
             }
-            user.save(err2 => {
+            user.save(async(err2) => {
               if (err2) {
                 res.status(500).json(err2);
               } else {
+                session.set("user", json);
+                await session.save();
                 res.status(200).json(json);
               }
             });

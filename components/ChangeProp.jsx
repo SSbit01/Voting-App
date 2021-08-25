@@ -22,11 +22,11 @@ export default function ChangeProp({title="", prop="a", type="text", disable=fal
       }).then(r => r.json()).then(res => {
         setDisable(false);
         if (res?.isLoggedIn) {
-          alert(`${title} successfully updated`);
           setValue(prop, "", {shouldValidate: true});
           if (isName) {
             mutateUser(res);
           }
+          alert(`${title} successfully updated`);
         } else {
           alert(JSON.stringify(res));
         }
