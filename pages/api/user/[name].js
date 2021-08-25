@@ -55,7 +55,7 @@ export default Session((req, res) => {
               if (err2) {
                 res.status(500).json(err2);
               } else {
-                session.set("user", {});
+                session.set("user", {isLoggedIn: false});
                 let votes = session.get("votes");
                 if (!votes) {
                   votes = {}

@@ -1,7 +1,7 @@
 import Session from "../../lib/Session";
 
 export default Session(async({session}, res) => {
-  session.set("user", {});
+  session.set("user", {isLoggedIn: false});
   let votes = session.get("votes");
   if (!votes) {
     votes = {}

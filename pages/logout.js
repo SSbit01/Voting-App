@@ -9,7 +9,6 @@ export default function LogOut() {
     fetch("api/logout")
       .then(r => r.json())
       .then(res => {
-        alert("Success: You've been logged out");
         mutateUser(res);
       });
   }, []);
