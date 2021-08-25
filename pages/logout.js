@@ -1,18 +1,16 @@
 import {useEffect} from "react";
-import {useRouter} from "next/router";
 import useUser from "../lib/useUser";
 
 
 export default function LogOut() {
-  const router = useRouter();
-  const {mutateUser} = useUser();
+  const {mutateUser} = useUser({redirectTo: "/"});
 
   useEffect(() => {
     fetch("api/logout")
       .then(r => r.json())
       .then(res => {
+        alert("Success: You've been logged out");
         mutateUser(res);
-        router.push("/");
       });
   }, []);
 
