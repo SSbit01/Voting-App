@@ -16,7 +16,7 @@ export default function Settings() {
       }).then(r => r.json()).then(res => {
         if (res?.isLoggedIn === false) {
           alert("Account successfully deleted");
-          mutateUser(res);
+          mutateUser(res, false);
         } else {
           setDisable(false);
           alert(JSON.stringify(res));

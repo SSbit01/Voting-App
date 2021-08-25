@@ -9,7 +9,7 @@ export default function LogOut() {
     fetch("api/logout")
       .then(r => r.json())
       .then(res => {
-        mutateUser(res);
+        mutateUser(res, false);
       });
   }, []);
 
