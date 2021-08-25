@@ -1,0 +1,45 @@
+@tailwind base;
+@layer base {
+  h1 {
+    @apply text-2xl;
+  }
+  h2 {
+    @apply text-xl;
+  }
+  a {
+    @apply font-bold duration-200;
+  }
+  button {
+    @apply bg-blue-600 text-white p-2 rounded shadow-2xl duration-200 hover:opacity-75 focus:ring disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  form {
+    @apply flex flex-col gap-4 bg-gray-300 p-6 border border-gray-500 rounded-2xl shadow-md;
+  }
+  fieldset {
+    @apply border border-blue-600 rounded p-2 shadow;
+  }
+  .polls {
+    @apply flex flex-wrap items-start justify-center gap-1;
+  }
+  .button2 {
+    @apply bg-green-700 ring-green-400;
+  }
+  .plus_minus {
+    @apply flex items-center justify-center gap-2 mt-1;
+  }
+  .plus_minus button {
+    @apply flex-1 text-2xl p-0 pb-1 bg-gray-900 ring-gray-500 border border-transparent;
+  }
+  .menu-items {
+    @apply flex flex-col border border-black shadow-2xl z-50;
+  }
+  .menu-items button {
+    @apply text-black border border-black bg-gray-200 rounded-none ring-transparent hover:text-white hover:opacity-100;
+  }
+  .none-if-empty:empty {
+    @apply hidden;
+  }
+}
+
+@tailwind components;
+@tailwind utilities;
