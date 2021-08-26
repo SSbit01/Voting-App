@@ -1,14 +1,13 @@
 import Session from "../../lib/Session";
 
 export default Session(async({session}, res) => {
-  session.set("user", {isLoggedIn: false});
+  const json = {isLoggedIn: false}
+  session.set("user", json);
+  await session.save();
   let votes = session.get("votes");
   if (!votes) {
     votes = {}
   }
-  await session.save();
-  res.status(200).json({
-    isLoggedIn: false,
-    votes
-  });
+  json.votes = votes;
+  res.status(200).json(json);
 });
