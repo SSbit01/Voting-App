@@ -18,7 +18,7 @@ export default function NewPoll() {
     options: new Array(MinOptionsLength).fill({value: ""})
   }
 
-  const {control, register, handleSubmit, formState: {isDirty, isValid}, setFocus} = useForm({
+  const {control, register, handleSubmit, formState: {isDirty, isValid, isSubmitting}, setFocus} = useForm({
     mode: "onChange",
     defaultValues
   });
@@ -33,25 +33,21 @@ export default function NewPoll() {
     name: "options"
   });
 
-  const [disable, setDisable] = useState(false);
-
   useEffect(() => {
     setFocus("q");
   }, []);
 
-  function onSubmit(data) {
-    setDisable(true);
+  async function onSubmit(data) {
     const body = JSON.stringify({
       q: data.q,
       original_options: [...new Set(data.options.map(f => f.value))]
     });
-    fetch("/api/poll", {
+    await fetch("/api/poll", {
       method:"POST",
       headers: {"Content-Type": "application/json"},
       body
     }).then(r => r.json()).then(data => {
       if (!data?.id) {
-        setDisable(false);
         alert(JSON.stringify(data));
       } else {
         router.push(`/poll/${data.id}`);
@@ -72,11 +68,11 @@ export default function NewPoll() {
             validate() {
               return new Set(watchOptions.map(f => f.value)).size === fields.length;
             }
-          })} disabled={disable}/>
+          })} disabled={isSubmitting}/>
         ))}
         <PlusMinus plus={() => append({value: ""})} minus={() => remove(fields.length-1)} disabled_minus={fields.length <= MinOptionsLength}/>
       </fieldset>
-      <button type="submit" disabled={!isDirty || !isValid || disable}>New Poll</button>
+      <button type="submit" disabled={!isDirty || !isValid || isSubmitting}>New Poll</button>
     </form>
   );
 }
