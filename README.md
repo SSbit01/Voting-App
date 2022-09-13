@@ -1,20 +1,27 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Voting App
 
+This is a [Next.js](https://nextjs.org) platform created by [SSbit01](https://github.com/SSbit01) where users can create polls and everyone can vote on them.
 
-### How to build this project
-1. Create a file called `next.config.js`in the root folder with the following structure and set the **environment variables**:
+---
+
+## Required environment variables
+
+- `MONGO_URI`
+: MongoDB URI string
+- `COOKIE_NAME`
+: e.g. *voting-app_cookie*
+- `COOKIE_PASSWORD`
+: complex password at least **32 characters long**
+
+> Remember to **install local packages**, I used [pnpm](https://pnpm.io/) package manager for this project, but of course you can use any other package manager like [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/).
+
+---
+
+This project works like any other [Next.js](https://nextjs.org/) project. The following `scripts` can be found in the `package.json` file and refer to the different development stages.
+
+```json
+"dev": "next dev",
+"build": "next build",
+"start": "next start",
+"lint": "next lint"
 ```
-module.exports = {
-	env: {
-		cookie_password: "COOKIE PASSWORD HERE",
-		MONGO_URI: "MONGO URI HERE"
-	}
-}
-```
-**IMPORTANT:** The cookie password has to be at least 32 characters long.
-
-2. Run `npm install` in the root folder.
-
-3. Then, run `npm build`.
-
-4. And finally, `npm start`.
