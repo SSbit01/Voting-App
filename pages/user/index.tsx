@@ -176,7 +176,7 @@ function Settings() {
             <ExclamationTriangleIcon className="w-7"/>Danger Zone
           </h2>
           <div className="grid gap-2 p-3">
-            <button type="button" onClick={logOut} className="flex justify-center items-center gap-1.5 bg-white enabled:text-orange-600 font-semibold p-1.5 border enabled:border-orange-600 rounded float-right transition enabled:hover:bg-orange-600 enabled:hover:text-white focus:ring-4 disabled:cursor-not-allowed">
+            <button type="button" disabled={isSubmitting} onClick={logOut} className="flex justify-center items-center gap-1.5 bg-white enabled:text-orange-600 font-semibold p-1.5 border enabled:border-orange-600 rounded float-right transition enabled:hover:bg-orange-600 enabled:hover:text-white focus:ring-4 disabled:cursor-not-allowed">
               <ArrowRightOnRectangleIcon className="w-6"/>Log Out
             </button>
             <button type="button" disabled={isSubmitting} onClick={deleteAccount} className="flex items-center justify-center gap-1.5 bg-white enabled:text-red-500 font-semibold p-1.5 border enabled:border-red-500 rounded transition enabled:hover:bg-red-500 enabled:hover:text-white focus:ring-4 disabled:cursor-not-allowed">
