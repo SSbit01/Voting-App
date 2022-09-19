@@ -13,8 +13,6 @@ import Spinner from "@/components/Spinner"
 
 import type {ReactNode} from "react"
 
-import type {UserCookie} from "@/lib/withSession"
-
 
 const CloseModalButton = memo(function CloseModalButton({onClick, disabled = false}: {
   onClick(): any
@@ -28,6 +26,11 @@ const CloseModalButton = memo(function CloseModalButton({onClick, disabled = fal
 })
 
 
+interface ModalProps {
+  show: boolean
+  onClose(): void
+}
+
 export type ReturnConfirmFunction = void | (() => any)
 export type ConfirmFunction = () => Promise<ReturnConfirmFunction> | ReturnConfirmFunction
 
@@ -38,9 +41,7 @@ const Modal = memo(function Modal({
   afterLeave,
   className = "relative bg-slate-300 p-4 rounded-lg border border-slate-500 shadow m-auto",
   children
-}: {
-  show: boolean
-  onClose(): void
+}: ModalProps & {
   afterLeave(): void
   className?: string
   children: ReactNode
@@ -80,10 +81,7 @@ const Modal = memo(function Modal({
 export default Modal
 
 
-export const SignUp = memo(function SignUp({show, onClose}: {
-  show: boolean
-  onClose(): void
-}) {
+export const SignUp = memo(function SignUp({show, onClose}: ModalProps) {
   const methods = useForm({
           mode: "onChange",
           defaultValues: {
@@ -101,34 +99,43 @@ export const SignUp = memo(function SignUp({show, onClose}: {
     }
   }, [isSubmitting, onClose])
   
-  async function onSubmit(data) {
+  const onSubmit = handleSubmit(async function onSubmit(data) {
     try {
-      const cookie = await fetchJson<UserCookie | {err: string}>("/api/signup", {
+      const res = await fetch("/api/signup", {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify(data)
       })
-      if ("err" in cookie) {
-        setError("name", {
-          message: "Choose Another Username"
-        }, {
-          shouldFocus: true
-        })
-      } else {
-        mutateUser(cookie)
-        closeModal()
+      switch(res.status) {
+        case 200:
+          res.json().then(({id}) => {
+            mutateUser({
+              id,
+              name: data.name
+            })
+            closeModal()
+          })
+          break
+        case 409:
+          setError("name", {
+            message: "Choose Another"
+          }, {
+            shouldFocus: true
+          })
       }
     } catch(err) {
       alert(err)
       throw err
     }
-  }
+  })
 
   return (
     <Modal show={show} onClose={closeModal} afterLeave={reset}>
       <Dialog.Title className="text-2xl text-center font-bold italic text-slate-700 mb-2.5">Sign Up</Dialog.Title>
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
+        <form onSubmit={onSubmit} className="grid gap-4">
           <NameField/>
           <PasswordField required="Required" repeat/>
           <SubmitForm>
@@ -144,9 +151,7 @@ export const SignUp = memo(function SignUp({show, onClose}: {
 })
 
 
-export const Alert = memo(function Alert({show, onClose, children, confirm}: {
-  show: boolean
-  onClose(): void
+export const Alert = memo(function Alert({show, onClose, children, confirm}: ModalProps & {
   children: ReactNode
   confirm?: ConfirmFunction
 }) {
@@ -197,11 +202,14 @@ export const Alert = memo(function Alert({show, onClose, children, confirm}: {
 })
 
 
-export const LogIn = memo(function LogIn({show, onClose}: {
-  show: boolean
-  onClose(): void
-}) {
-  const methods = useForm({mode: "onChange"}),
+export const LogIn = memo(function LogIn({show, onClose}: ModalProps) {
+  const methods = useForm({
+          mode: "onChange",
+          defaultValues: {
+            name: "",
+            password: ""
+          }
+        }),
         {handleSubmit, setError, reset, formState: {isSubmitting}} = methods,
         {mutateUser} = useUser()
   
@@ -211,7 +219,7 @@ export const LogIn = memo(function LogIn({show, onClose}: {
     }
   }
 
-  async function onSubmit(data) {
+  const onSubmit = handleSubmit(async(data) => {
     try {
       const res = await fetch("/api/login", {
         method: "POST",
@@ -222,8 +230,11 @@ export const LogIn = memo(function LogIn({show, onClose}: {
       })
       switch(res.status) {
         case 200:
-          res.json().then(user => {
-            mutateUser(user)
+          res.json().then(({id}) => {
+            mutateUser({
+              id,
+              name: data.name
+            })
             closeModal()
           })
           break
@@ -245,13 +256,13 @@ export const LogIn = memo(function LogIn({show, onClose}: {
       alert(err)
       throw err
     }
-  }
+  })
 
   return (
     <Modal show={show} onClose={closeModal} afterLeave={reset}>
       <Dialog.Title className="text-2xl text-center font-bold italic text-slate-700 mb-2.5">Log In</Dialog.Title>
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
+        <form onSubmit={onSubmit} className="grid gap-4">
           <NameField/>
           <PasswordField required="Required"/>
           <SubmitForm>
@@ -267,10 +278,7 @@ export const LogIn = memo(function LogIn({show, onClose}: {
 })
 
 
-export const LogOut = memo(function LogOut({show, onClose}: {
-  show: boolean
-  onClose(): void
-}) {
+export const LogOut = memo(function LogOut({show, onClose}: ModalProps) {
   const {mutateUser} = useUser()
 
   async function logOut() {

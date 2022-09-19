@@ -13,7 +13,7 @@ import useVotes from "@/lib/useVotes"
 import fetchJson from "@/lib/fetchJson"
 import {answerField} from "@/lib/attributes"
 
-import {useModal} from "@/components/Context"
+import {cookieDisabledState, useModal} from "@/components/Context"
 import {SubmitForm} from "@/components/FormFields"
 
 import type {Dispatch, SetStateAction} from "react"
@@ -275,7 +275,7 @@ const NewAnswerForm = memo(function NewAnswerForm({_id, disabledState: [disabled
         {handleSubmit, register, formState: {errors}} = methods
   
   
-  async function onSubmit({answer}) {
+  const onSubmit = handleSubmit(async({answer}) => {
     setDisabled(true)
 
     const {err} = await fetchJson<{err?: string}>(`/api/poll/${_id}`, {
@@ -303,12 +303,12 @@ const NewAnswerForm = memo(function NewAnswerForm({_id, disabledState: [disabled
     mutateVotes(prevVotes => ({...prevVotes, [_id]: answer}))
 
     setDisabled(false)
-  }
+  })
 
 
   return (
     <FormProvider {...methods}>
-      <form className="grid gap-2 relative" onSubmit={handleSubmit(onSubmit)}>
+      <form className="grid gap-2 relative" onSubmit={onSubmit}>
         <input type="text" maxLength={answerField.maxLength} pattern={answerField.pattern.source} disabled={disabled} {...register("answer", {
           maxLength: answerField.maxLength,
           pattern: {
@@ -408,27 +408,31 @@ const SelectAnswer = memo(function SelectAnswer(props: Required<Pick<PollProps, 
   async function onClick({currentTarget: {value}}: {
     currentTarget: HTMLButtonElement
   }) {
-    setDisabled(true)
-
-    try {
-      const {err} = await fetchJson<{err?: string}>(`/api/vote/${_id}?answer=${value}`)
-      if (err) {
-        throw err
+    if (navigator.cookieEnabled) {
+      setDisabled(true)
+      
+      try {
+        const {err} = await fetchJson<{err?: string}>(`/api/vote/${_id}?answer=${value}`)
+        if (err) {
+          throw err
+        }
+        setAnswers(prevAnswers => {
+          prevAnswers.find(({value: v}) => v === value).votes++
+          return [...prevAnswers]
+        })
+        mutateVotes(prevVotes => ({...prevVotes, [_id]: value}))
+      } catch(err) {
+        modal({type: "alert", message: (
+          <Dialog.Title className="text-2xl text-center">
+            {err}
+          </Dialog.Title>
+        )})
       }
-      setAnswers(prevAnswers => {
-        prevAnswers.find(({value: v}) => v === value).votes++
-        return [...prevAnswers]
-      })
-      mutateVotes(prevVotes => ({...prevVotes, [_id]: value}))
-    } catch(err) {
-      modal({type: "alert", message: (
-        <Dialog.Title className="text-2xl text-center">
-          {err}
-        </Dialog.Title>
-      )})
-    }
 
-    setDisabled(false)
+      setDisabled(false)
+    } else {
+      modal(cookieDisabledState)
+    }
   }
 
 

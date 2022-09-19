@@ -21,7 +21,7 @@ export const getServerSideProps: GetServerSideProps = async({params: {id}}) => {
   }
   
   props._id = props._id.toJSON()
-  props.createdAt = props.createdAt.toLocaleDateString()
+  props.createdAt = props.createdAt.toJSON()
 
   return {props}
 }
@@ -44,18 +44,24 @@ import type {PollProps} from "@/components/Poll"
 
 
 
-export default function UserPage({_id, name, createdAt}: {
+export default function UserPage({_id, name, createdAt: createdAtProp}: {
   _id: string
   name: string
   createdAt: string
 }) {
   const author = useMemo(() => ({_id, name}), [_id, name]),
         //
+        [createdAt, setCreatedAt] = useState<string>(),
         [polls, setPolls] = useState<PollProps[]>([]),
         [isLoading, setIsLoading] = useState(true),
         [next, setNext] = useState(true),
         //
         modal = useModal()
+
+  
+  useEffect(() => {
+    setCreatedAt(new Date(createdAtProp).toLocaleDateString())
+  }, [createdAtProp])
 
 
   useEffect(() => {
@@ -91,7 +97,10 @@ export default function UserPage({_id, name, createdAt}: {
         setIsLoading(false)
       }).catch(console.error)
       
-      return () => abortController.abort()
+      return () => {
+        abortController.abort()
+        setIsLoading(false)
+      }
     }
   }, [isLoading, _id, modal, polls])
 
@@ -119,7 +128,7 @@ export default function UserPage({_id, name, createdAt}: {
         </p>
       </section>
       <section className="flex flex-wrap items-start justify-center gap-6 mt-6">
-        {polls.length ? polls.map((data, i) => (
+        {polls.length ? polls.map(data => (
           <MyPoll key={data._id} author={author} afterDelete={afterDelete} {...data}/>
         )) : (
           <p className="text-xl italic">No Polls yet...</p>

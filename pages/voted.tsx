@@ -76,7 +76,7 @@ export default function VotedPage({polls: pollsProp}) {
     <main className="flex flex-col items-center justify-center gap-6 mt-7 mx-3 mb-12">
       <h1 className="text-4xl font-medium text-center italic">Voted Polls</h1>
       <section className="flex flex-wrap items-start justify-center gap-6 w-full">
-        {polls.length ? polls.map((data, i) => (
+        {polls.length ? polls.map(data => (
           <MyPoll key={data._id} afterDelete={afterDelete} {...data}/>
         )) : (
           <h2 className="text-xl -mb-1">You haven&apos;t voted in any polls yet!</h2>

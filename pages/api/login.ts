@@ -15,7 +15,9 @@ export default withSessionRoute(async({method, body, session}, res) => {
               name,
             }
             await session.save()
-            res.json(session.user)
+            res.json({
+              id: session.user.id
+            })
           } else {
             res.status(401).json({err: "Incorrect Password"})
           }

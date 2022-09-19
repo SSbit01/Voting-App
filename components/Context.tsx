@@ -1,4 +1,6 @@
 import {createContext, useReducer, useContext} from "react"
+import {Dialog} from "@headlessui/react"
+
 import {SignUp, LogIn, LogOut, Alert} from "@/components/Modal"
 
 import type {Dispatch, ReactNode} from "react"
@@ -17,6 +19,15 @@ const SIGNUP = "signup",
       LOGOUT = "logout",
       ALERT = "alert"
 
+export const cookieDisabledState = {
+  type: ALERT,
+  message: (
+    <Dialog.Title className="text-2xl text-center italic">
+      Cookies Are Disabled
+    </Dialog.Title>
+  )
+}
+
 
 function modalReducer(
   state: ModalState,
@@ -24,9 +35,9 @@ function modalReducer(
 ): ModalState {
   switch(type) {
     case SIGNUP:
-      return {type: SIGNUP}
+      return navigator.cookieEnabled ? {type: SIGNUP} : {...cookieDisabledState}
     case LOGIN:
-      return {type: LOGIN}
+      return navigator.cookieEnabled ? {type: LOGIN} : {...cookieDisabledState}
     case LOGOUT:
       return {type: LOGOUT}
     case ALERT:
