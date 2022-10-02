@@ -135,7 +135,7 @@ const Options = memo(function Options({_id, afterDelete, disabled, answers, isVo
 }) {
   const API = `/api/poll/${_id}`,
         modal = useModal(),
-        areThereAnswers = Boolean(answers?.length)
+        areThereAnswers = !!answers?.length
 
 
   return (
@@ -195,18 +195,19 @@ const Options = memo(function Options({_id, afterDelete, disabled, answers, isVo
                           </>
                         ),
                         async confirm() {
-                          const {err, closed: newClosedDate} = await fetchJson<{
+                          const {err, closed: newClosedDate}: {
                             err?: string
                             closed?: string
-                          }>(API, {method: "PATCH"})
+                          } = await fetchJson(API, {method: "PATCH"})
                           if (err) {
                             return () => modal({type: "alert", message: (
                               <Dialog.Title className="text-2xl text-center">
                                 {err}
                               </Dialog.Title>
                             )})
+                          } else if (newClosedDate) {
+                            setClosedDate(new Date(newClosedDate).toLocaleString())
                           }
-                          setClosedDate(new Date(newClosedDate).toLocaleString())
                         }
                       })
                     }} className={clsx("flex items-center gap-1.5 w-full pr-3 pl-1.5 py-1 first:rounded-t last:rounded-b transition duration-150", active && "bg-slate-900")}>
@@ -226,7 +227,7 @@ const Options = memo(function Options({_id, afterDelete, disabled, answers, isVo
                         </Dialog.Title>
                       ),
                       async confirm() {
-                        const {err} = await fetchJson<{err?: string}>(API, {method: "DELETE"})
+                        const {err}: {err?: string} = await fetchJson(API, {method: "DELETE"})
                         if (err) {
                           return () => modal({type: "alert", message: (
                             <Dialog.Title className="text-2xl">
@@ -278,7 +279,7 @@ const NewAnswerForm = memo(function NewAnswerForm({_id, disabledState: [disabled
   const onSubmit = handleSubmit(async({answer}) => {
     setDisabled(true)
 
-    const {err} = await fetchJson<{err?: string}>(`/api/poll/${_id}`, {
+    const {err}: {err?: string} = await fetchJson(`/api/poll/${_id}`, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({answer})
@@ -317,7 +318,7 @@ const NewAnswerForm = memo(function NewAnswerForm({_id, disabledState: [disabled
           },
           validate(value) {
             if (answers.some(({value: answerValue}) => answerValue == value)) {
-              return "This answer already exists"
+              return "Already exists"
             }
           }
         })}/>
@@ -391,7 +392,7 @@ const NotLoggedIn = memo(function NotLoggedIn() {
 const SelectAnswer = memo(function SelectAnswer(props: Required<Pick<PollProps, "_id">> & {
   disabledState: DisabledState
   answersState: AnswersState
-  authorId?: PollProps["author"]["_id"]
+  authorId?: NonNullable<PollProps["author"]>["_id"]
 }) {
   const {authorId, ...restProps} = props,
         {_id, answersState: [answers, setAnswers], disabledState: [disabled, setDisabled]} = restProps,
@@ -411,22 +412,20 @@ const SelectAnswer = memo(function SelectAnswer(props: Required<Pick<PollProps, 
     if (navigator.cookieEnabled) {
       setDisabled(true)
       
-      try {
-        const {err} = await fetchJson<{err?: string}>(`/api/vote/${_id}?answer=${value}`)
-        if (err) {
-          throw err
-        }
-        setAnswers(prevAnswers => {
-          prevAnswers.find(({value: v}) => v === value).votes++
-          return [...prevAnswers]
-        })
-        mutateVotes(prevVotes => ({...prevVotes, [_id]: value}))
-      } catch(err) {
+      const {err}: {err?: string} = await fetchJson(`/api/vote/${_id}?answer=${value}`)
+      
+      if (err) {
         modal({type: "alert", message: (
           <Dialog.Title className="text-2xl text-center">
             {err}
           </Dialog.Title>
         )})
+      } else {
+        setAnswers(prevAnswers => {
+          prevAnswers.find(({value: v}) => v === value)!.votes++
+          return [...prevAnswers]
+        })
+        mutateVotes(prevVotes => ({...prevVotes, [_id]: value}))
       }
 
       setDisabled(false)
@@ -494,12 +493,12 @@ const ShareButton = memo(function ShareButton({_id}: Pick<PollProps, "_id">) {
   const [showShare, setShowShare] = useState(false)
 
   useEffect(() => {
-    if (!showShare && navigator?.canShare) {
+    if (!showShare && navigator?.["canShare"]) {
       setShowShare(true)
     }
   }, [showShare])
 
-  return showShare && (
+  return showShare ? (
     <div className="text-right">
       <button className="transition align-bottom focus:ring rounded-sm text-slate-600 hover:text-slate-700" onClick={() => {
         navigator.share({
@@ -509,7 +508,7 @@ const ShareButton = memo(function ShareButton({_id}: Pick<PollProps, "_id">) {
         <ShareIcon className="w-6"/>
       </button>
     </div>
-  )
+  ) : null
 })
 
 

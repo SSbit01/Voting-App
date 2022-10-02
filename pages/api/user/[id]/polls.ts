@@ -4,7 +4,7 @@ import {isValidObjectId} from "mongoose"
 import {Poll} from "@/lib/mongooseController"
 
 
-export default async function getUserPollsApi({query: {id: userId, before, limit = "15"}}: NextApiRequest, res: NextApiResponse) {
+export default async function getUserPollsApi({query: {id: userId, before, limit = "10"}}: NextApiRequest, res: NextApiResponse) {
   if (!isValidObjectId(userId)) {
     res.status(422).json({err: "Invalid user _id"})
   } else {
@@ -13,12 +13,11 @@ export default async function getUserPollsApi({query: {id: userId, before, limit
         before = before[0]
       }
 
-      const beforeParsed = Date.parse(before),
-            query = {
+      const query = {
               author: userId,
-              ...beforeParsed && {
+              ...before && {
                 createdAt: {
-                  $lt: beforeParsed
+                  $lt: Date.parse(before)
                 }
               }
             },

@@ -62,14 +62,14 @@ export function PasswordField({
       <legend className="flex gap-1 px-1 italic">
         <LockClosedIcon className="w-5 text-cyan-900"/>Password
       </legend>
-      <input type="password" placeholder="e.g. Test1234" maxLength={maxLength} {...register(NAME, {required, maxLength, validate: repeat && function(value) {
-        const repeatValue =  repeatPasswordRef.current.value
+      <input type="password" placeholder="e.g. Test1234" maxLength={maxLength} {...register(NAME, {required, maxLength, validate: repeat ? function(value) {
+        const repeatValue =  repeatPasswordRef.current?.value
         if (value && !repeatValue) {
           return ""
         } else if (value != repeatValue) {
           return "Not Match"
         }
-       }})}/>
+       } : undefined})}/>
       {repeat && (
         <input ref={repeatPasswordRef} type="password" placeholder="Repeat password" maxLength={maxLength} disabled={!repeatPasswordRef.current?.value && !dirtyFields[NAME]} className="disabled:bg-gray-200 disabled:border-slate-400 disabled:cursor-not-allowed" onChange={() => {
           trigger(NAME)
@@ -118,14 +118,17 @@ export function AnswersField() {
         {maxLength, pattern, patternMessage} = answerField,
         patternSource = pattern.source,
         //
-        {register, watch, formState} = useFormContext(),
+        {register, formState} = useFormContext(),
         {errors, isSubmitting, isSubmitSuccessful} = formState,
-        {fields, append, remove} = useFieldArray({name: NAME}),
-        watchFields = watch(NAME)
-
-  function validate(value: string) {
-    return !value || watchFields.filter(f => f.value == value).length <= 1
-  }
+        {fields, append, remove} = useFieldArray({
+          name: NAME,
+          /*rules: {
+            validate(arr) {
+              arr = (arr as Array<{value: string}>).flatMap(({value}) => value || [])
+              return arr.length == new Set(arr).size || "Duplicates"  // It doesn't append to "errors" array, it may be a React Hook Form bug
+            }
+          }*/
+        })
   
   function appendInput() {
     append({value: ""})
@@ -136,15 +139,15 @@ export function AnswersField() {
   }
   
   return (
-    <fieldset disabled={isSubmitting || isSubmitSuccessful} className={`grid gap-1 pt-1 px-2 pb-2 border rounded transition-colors ${NAME in errors ? "border-red-500" : "border-cyan-600"}`}>
+    <fieldset disabled={isSubmitting || isSubmitSuccessful} className={`grid gap-1 relative pt-1 px-2 pb-2 border rounded transition-colors ${NAME in errors ? "border-red-500" : "border-cyan-600"}`}>
       <legend className="flex gap-1.5 px-1 italic">
         <CursorArrowRaysIcon className="w-5 text-cyan-900"/>Answers
       </legend>
       {fields.map((field, i) => {
-        const NAME_FIELD = `${NAME}[${i}].value`
+        const NAME_FIELD = `${NAME}.${i}.value` as const
         return (
           <div key={field.id} className="relative">
-            <input type="text" maxLength={maxLength} pattern={patternSource} placeholder={`e.g. Answer ${i + 1}`} className="w-full" {...register(NAME_FIELD, {maxLength, validate, pattern: {
+            <input type="text" maxLength={maxLength} pattern={patternSource} placeholder={`e.g. Answer ${i + 1}`} className="w-full" {...register(NAME_FIELD, {maxLength, pattern: {
               value: pattern,
               message: patternMessage
             }})}/>
@@ -164,6 +167,11 @@ export function AnswersField() {
           <MinusIcon className="w-5 m-auto"/>
         </button>
       </div>
+      <ErrorMessage
+        errors={errors}
+        name={NAME}
+        render={({message}) => <p className="absolute -top-6 right-3 bg-slate-900/95 text-red-600 font-bold px-2 rounded shadow">{message}</p>}
+      />
     </fieldset>
   )
 }

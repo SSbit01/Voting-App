@@ -9,7 +9,7 @@ export default withSessionRoute(async({method, session, body, query: {id}}, res)
   if (Array.isArray(id)) id = id[0]
 
 
-  if (!isValidObjectId(id)) {
+  if (!id || !isValidObjectId(id)) {
     res.status(422).json({err: "Invalid _id"})
   } else if (session.user?.id) {
 

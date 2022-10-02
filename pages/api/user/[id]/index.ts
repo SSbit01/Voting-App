@@ -7,38 +7,35 @@ import {User, Poll} from "@/lib/mongooseController"
 export default withSessionRoute(async({body, method, session, query: {id: userId}}, res) => {
   if (!isValidObjectId(userId)) {
     res.status(422).json({err: "Invalid _id"})
-  } else if (session.user?.id == userId) {
+  } else if (session.user && session.user.id == userId) {
 
     switch(method) {
 
       case "PATCH":
         if (body && typeof body === "object" && !Array.isArray(body)) {
-          let bodyLength = Object.keys(body).length
-          if (bodyLength) {
+          const areThereKeys = ["name", "password"].filter(p => p in body).length
+          if (areThereKeys) {
             try {
               const user = await User.findById(userId)
               if (user) {
-                if (body.password && user.comparePassword(body.password)) {
-                  delete body.password
-                  bodyLength--
+                if (typeof body.name === "string" && body.name != session.user.name) {
+                  user.name = body.name
+                  session.user.name = body.name
+                  await session.save()
                 }
-                if (bodyLength) {
-                  for (const i in body) {
-                    user[i] = body[i]
-                  }
+                if (typeof body.password === "string" && !user.comparePassword(body.password)) {
+                  user.password = body.password
+                }
+                if (user.isModified()) {
                   await user.save()
-                  if (body.name && body.name != session.user.name) {
-                    session.user.name = body.name
-                    await session.save()
-                  }
-                  res.json({}) 
+                  res.json({})
                 } else {
-                  res.status(400).json({err: "Only your old password was supplied"})
+                  res.status(400).json({err: "Account not updated"})
                 }
               } else {
                 res.status(404).json({err: "Not Found"})
               }
-            } catch(err) {
+            } catch(err: any) {
               if (err?.keyPattern?.name) {
                 res.status(409).json({err: "This username is already taken"})
               } else {
@@ -46,7 +43,7 @@ export default withSessionRoute(async({body, method, session, query: {id: userId
               }
             }
           } else {
-            res.status(400).json({err: "No fields were supplied"})
+            res.status(400).json({err: "No valid fields were supplied"})
           }
         } else {
           res.status(400).json({err: "Body is not an object"})

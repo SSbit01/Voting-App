@@ -283,7 +283,7 @@ export const LogOut = memo(function LogOut({show, onClose}: ModalProps) {
 
   async function logOut() {
     try {
-      mutateUser(await fetchJson<{}>("/api/logout"), false)
+      mutateUser(await fetchJson("/api/logout"), false)
     } catch {
       alert("An error occurred")
     }

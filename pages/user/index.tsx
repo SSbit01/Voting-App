@@ -42,12 +42,12 @@ function Settings() {
 
   const updateAccount = handleSubmit(async(data) => {
     for (const i in data) {
-      if (["", user[i]].includes(data[i])) {
-        delete data[i]
+      if (["", user[i as keyof typeof user]].includes(data[i as keyof typeof data])) {
+        delete data[i as keyof typeof data]
       }
     }
 
-    const {err} = await fetchJson<{err?: string}>(`/api/user/${user.id}`, {
+    const {err}: {err?: string} = await fetchJson(`/api/user/${user.id}`, {
       method: "PATCH",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(data)
@@ -125,7 +125,7 @@ function Settings() {
         </Dialog.Title>
       ),
       async confirm() {
-        const cookie = await fetchJson<{} | {err: string}>(`/api/user/${user.id}`, {
+        const cookie: {} | {err: string} = await fetchJson(`/api/user/${user.id}`, {
           method: "DELETE"
         })
 

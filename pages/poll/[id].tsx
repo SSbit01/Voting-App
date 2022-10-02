@@ -5,12 +5,14 @@ import {withSessionSsr} from "@/lib/withSession"
 import {Poll} from "@/lib/mongooseController"
 
 
-export const getServerSideProps = withSessionSsr(async({req: {session}, params: {id}}) => {
+export const getServerSideProps = withSessionSsr(async({req: {session}, params}) => {
+  let id = params?.id
+
   if (Array.isArray(id)) {
     id = id[0]
   }
 
-  if (!isValidObjectId(id)) {
+  if (!id || !isValidObjectId(id)) {
     return {
       notFound: true
     }
@@ -58,7 +60,7 @@ export default function PollPage(props: Omit<PollProps, "_id" | "afterDelete">) 
     router.push("/")
   }
 
-  return (
+  return router.query.id && (
     <main className="flex justify-center mt-8 mx-4 mb-12">
       <MyPoll {...props} _id={Array.isArray(router.query.id) ? router.query.id[0] : router.query.id} afterDelete={returnHome}/>
     </main>

@@ -31,11 +31,11 @@ function NewPoll() {
         modal = useModal()
   
 
-  async function onSubmit({question, answers}) {
-    const {id, err} = await fetchJson<{
+  const onSubmit = handleSubmit(async({question, answers}) => {
+    const {id, err}: {
       id?: string
       err?: string
-    }>("/api/poll", {
+    } = await fetchJson("/api/poll", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
@@ -58,7 +58,7 @@ function NewPoll() {
     } else {
       throw "An error occurred"
     }
-  }
+  })
 
   
   return (
@@ -67,7 +67,7 @@ function NewPoll() {
         <PlusIcon className="w-12 text-slate-700"/>New Poll
       </h1>
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4	p-2">
+        <form onSubmit={onSubmit} className="grid gap-4	p-2">
           <QuestionField required autoFocus/>
           <AnswersField/>
           <SubmitForm>

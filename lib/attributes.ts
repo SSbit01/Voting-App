@@ -14,7 +14,7 @@ export const questionField = {
 }
 
 export const answerField = {
-  maxLength: 40,
+  maxLength: 100,
   pattern: /^\S(.*\S)?$/,
   patternMessage: "No leading or trailing spaces"
 }

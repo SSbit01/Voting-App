@@ -2,6 +2,9 @@ import {withIronSessionApiRoute, withIronSessionSsr} from "iron-session/next"
 import type {NextApiHandler, GetServerSideProps} from "next"
 
 
+if (!process.env.COOKIE_PASSWORD) throw "COOKIE_PASSWORD environment variable is not defined!"
+
+
 const sessionOptions = {
   password: process.env.COOKIE_PASSWORD,
   cookieName: process.env.COOKIE_NAME || "voting-app_cookie",

@@ -8,7 +8,7 @@ export default withSessionRoute(async({session, query: {id, answer}}, res) => {
   if (Array.isArray(id)) id = id[0]
   if (Array.isArray(answer)) answer = answer[0]
 
-  if (!isValidObjectId(id)) {
+  if (!id || !isValidObjectId(id)) {
     res.status(422).json({err: "Invalid _id"})
   } else if (session.votes?.[id]) {
     res.status(403).json({err: "You have already voted in this poll"})

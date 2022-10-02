@@ -6,6 +6,7 @@ import {nameField, passwordField, questionField, answerField} from "@/lib/attrib
 import type {Types, PopulatedDoc, Document} from "mongoose"
 
 
+
 interface Timestamps {
   createdAt: Date
   updateAt: Date
@@ -22,7 +23,6 @@ export interface IUserMethods {
 
 export type UserModel = Model<IUser, {}, IUserMethods>
 
-//
 
 type PopulateUser = PopulatedDoc<Document<Types.ObjectId> & IUser>
 
@@ -42,16 +42,20 @@ export interface IPoll extends Timestamps {
 }
 
 
+
 const MODEL_NAME = {
   USER: "User",
   POLL: "Poll"
 }
 
 
+
 if (connection.readyState === 0) {
-  connect(process.env.MONGO_URI)
+  if (!process.env.MONGO_URI) {
+    throw "MONGO_URI environment variable is not defined!"
+  }
   
-  //
+  connect(process.env.MONGO_URI)
   
   const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     name: {
@@ -68,12 +72,11 @@ if (connection.readyState === 0) {
   }, {
     timestamps: true,
     toJSON: {virtuals: true},
-    toObject: {virtuals: true},
-    methods: {
-      comparePassword(data: string | Buffer) {
-        return compareSync(data, this.password)
-      }
-    }
+    toObject: {virtuals: true}
+  })
+
+  userSchema.method("comparePassword", function(data: string | Buffer) {
+    return compareSync(data, this.password)
   })
   
   userSchema.pre("save", function(next) {
@@ -88,8 +91,6 @@ if (connection.readyState === 0) {
   })
   
   model<IUser, UserModel>(MODEL_NAME.USER, userSchema)
-
-  //
   
   model<IPoll>(MODEL_NAME.POLL, new Schema<IPoll>({
     closed: Date,
@@ -136,5 +137,7 @@ if (connection.readyState === 0) {
 }
 
 
+
 export const User = model<IUser, UserModel>(MODEL_NAME.USER)
+
 export const Poll = model<IPoll>(MODEL_NAME.POLL)

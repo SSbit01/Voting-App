@@ -24,7 +24,7 @@ export default function HomePage() {
   return (
     <main className="grid items-center justify-center gap-8 mt-8 mx-3 mb-12">
       <h1 className="text-5xl text-center font-semibold italic select-none drop-shadow">
-        <Image src="/vercel.svg" alt="Logo" width={logoSize} height={logoSize}/><span className="-ml-2.5">oting</span> App
+        <Image src="/vercel.svg" alt="V" width={logoSize} height={logoSize}/><span className="-ml-2.5">oting</span> App
       </h1>
       <section className="md:text-lg lg:text-xl bg-slate-100 divide-y divide-slate-400 px-3 border border-slate-400 rounded-md shadow shadow-slate-400">
         {

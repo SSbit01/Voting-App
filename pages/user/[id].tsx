@@ -5,8 +5,14 @@ import type {GetServerSideProps} from "next"
 
 
 
-export const getServerSideProps: GetServerSideProps = async({params: {id}}) => {
-  if (!isValidObjectId(id)) {
+export const getServerSideProps: GetServerSideProps = async({params}) => {
+  let id = params?.id
+
+  if (Array.isArray(id)) {
+    id = id[0]
+  }
+
+  if (!id || !isValidObjectId(id)) {
     return {
       notFound: true
     }
@@ -30,17 +36,36 @@ export const getServerSideProps: GetServerSideProps = async({params: {id}}) => {
 
 
 // Client
-import {useState, useMemo, useEffect, useCallback} from "react"
-import {Dialog} from "@headlessui/react"
+import {memo, useState, useMemo, useEffect, useCallback} from "react"
+import useSWRInfinite from "swr/infinite"
 import {AtSymbolIcon, CalendarIcon} from "@heroicons/react/24/outline"
 
-import fetchJson from "@/lib/fetchJson"
-
-import {useModal} from "@/components/Context"
 import MyPoll from "@/components/Poll"
 import Spinner from "@/components/Spinner"
 
 import type {PollProps} from "@/components/Poll"
+
+
+
+type FetchedPolls = {
+  data: PollProps[]
+  next: boolean
+  err?: boolean
+}
+
+
+
+const Page = memo(function Page({data, author, afterDelete}: {
+  data: PollProps[]
+  author: PollProps["author"]
+  afterDelete?: PollProps["afterDelete"]
+}) {
+  return <>
+    {data.map(poll => (
+      <MyPoll key={poll._id} author={author} afterDelete={afterDelete} {...poll}/>
+    ))}
+  </>
+})
 
 
 
@@ -52,69 +77,29 @@ export default function UserPage({_id, name, createdAt: createdAtProp}: {
   const author = useMemo(() => ({_id, name}), [_id, name]),
         //
         [createdAt, setCreatedAt] = useState<string>(),
-        [polls, setPolls] = useState<PollProps[]>([]),
-        [isLoading, setIsLoading] = useState(true),
-        [next, setNext] = useState(true),
-        //
-        modal = useModal()
-
+        {data: polls, mutate: mutatePolls, setSize, isValidating} = useSWRInfinite<FetchedPolls>((pageIndex, previousPage) => {
+          let input = `/api/user/${_id}/polls`
+          if (previousPage && !("err" in previousPage)) {
+            if (!previousPage.next) {
+              return null
+            }
+            const lastPollDate = previousPage.data?.at(-1)?.createdAt
+            if (lastPollDate) {
+              input += `?before=${lastPollDate}`
+            }
+          }
+          return input
+        })
+  
   
   useEffect(() => {
     setCreatedAt(new Date(createdAtProp).toLocaleDateString())
   }, [createdAtProp])
 
-
-  useEffect(() => {
-    if (isLoading) {
-      const abortController = new AbortController()
-
-      let input = `/api/user/${_id}/polls`
-      const lastPollDate = polls.at(-1)?.createdAt
-      if (lastPollDate) {
-        input += `?before=${lastPollDate}`
-      }
-      
-      fetchJson<{
-        data: PollProps[]
-        next?: boolean
-      } | {
-        err: string
-      }>(input, {
-        signal: abortController.signal
-      }).then(res => {
-        if ("err" in res) {
-          modal({type: "alert", message: (
-            <Dialog.Title className="text-center text-2xl">
-              {res.err}
-            </Dialog.Title>
-          )})
-        } else if ("data" in res && Array.isArray(res.data)) {
-          setPolls(prevPolls => prevPolls.concat(res.data))
-          if ("next" in res) {
-            setNext(Boolean(res.next))
-          }
-        }
-        setIsLoading(false)
-      }).catch(console.error)
-      
-      return () => {
-        abortController.abort()
-        setIsLoading(false)
-      }
-    }
-  }, [isLoading, _id, modal, polls])
-
   
-  const afterDelete = useCallback((pollId: string) => {
-    setPolls(prevPolls => {
-      for (let i = 0; i < prevPolls.length; i++) {
-        if (pollId == prevPolls[i]._id) {
-          prevPolls.splice(i, 1)
-        }
-      }
-      return [...prevPolls]
-    })
-  }, [])
+  const afterDelete = useCallback(async() => {
+    await mutatePolls()
+  }, [mutatePolls])
 
 
   return (
@@ -127,19 +112,19 @@ export default function UserPage({_id, name, createdAt: createdAtProp}: {
           <CalendarIcon className="inline align-top w-6 mr-2"/>Joined {createdAt}
         </p>
       </section>
-      <section className="flex flex-wrap items-start justify-center gap-6 mt-6">
-        {polls.length ? polls.map(data => (
-          <MyPoll key={data._id} author={author} afterDelete={afterDelete} {...data}/>
-        )) : (
-          <p className="text-xl italic">No Polls yet...</p>
-        )}
-      </section>
+      {polls?.at(-1)?.data?.length ? (
+        <section className="flex flex-wrap items-start justify-center gap-6 mt-6">
+          {polls.map(({data}, i) => <Page key={i} data={data} author={author} afterDelete={afterDelete}/>)}
+        </section>
+      ) : !isValidating && (
+        <p className="text-xl text-center italic mt-4">No Polls yet...</p>
+      )}
       <div className="flex justify-center mt-6">
-        {next && (isLoading ? (
+        {isValidating ? (
           <Spinner className="w-10 text-slate-400"/>
-        ) : (
-          <button onClick={() => setIsLoading(true)} disabled={isLoading} className="transition bg-teal-800 text-slate-100 font-medium px-3 py-2 rounded-lg shadow-lg cursor-pointer hover:bg-teal-700 active:scale-95 focus:bg-teal-600 focus:shadow-cyan-500/50">Load More</button>
-        ))}
+        ) : polls?.at(-1)?.next && (
+          <button onClick={() => setSize(size => size + 1)} disabled={isValidating} className="transition bg-teal-800 text-slate-100 font-medium px-3 py-2 rounded-lg shadow-lg cursor-pointer hover:bg-teal-700 active:scale-95 focus:bg-teal-600 focus:shadow-cyan-500/50">Load More</button>
+        )}
       </div>
     </main>
   )
