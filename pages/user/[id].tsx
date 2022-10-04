@@ -103,9 +103,9 @@ export default function UserPage({_id, name, createdAt: createdAtProp}: {
 
 
   return (
-    <main className="relative mt-6 mx-4 mb-12">
-      <section className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-4xl font-medium italic">
+    <main className="relative mt-6 mb-12">
+      <section className="flex flex-col items-center gap-4 text-center mx-3">
+        <h1 className="text-4xl font-medium italic break-all">
           <AtSymbolIcon className="inline align-bottom w-8"/>{name}
         </h1>
         <p>
@@ -113,11 +113,11 @@ export default function UserPage({_id, name, createdAt: createdAtProp}: {
         </p>
       </section>
       {polls?.at(-1)?.data?.length ? (
-        <section className="flex flex-wrap items-start justify-center gap-6 mt-6">
+        <section className="flex flex-wrap items-start justify-center gap-6 mx-1 mt-6">
           {polls.map(({data}, i) => <Page key={i} data={data} author={author} afterDelete={afterDelete}/>)}
         </section>
       ) : !isValidating && (
-        <p className="text-xl text-center italic mt-4">No Polls yet...</p>
+        <p className="text-xl text-center italic mt-5">No Polls yet...</p>
       )}
       <div className="flex justify-center mt-6">
         {isValidating ? (

@@ -55,20 +55,19 @@ const AnswerResult = memo(function AnswerResult({value, votes, totalVotes, isMyV
   const percentage = 100 * (votes / totalVotes) || 0
 
   return (
-    <div className="relative" title={isMyVote ? "My Vote" : undefined}>
-      <div className={`absolute z-0 h-full rounded shadow ${isMyVote ? "bg-cyan-300 border border-slate-400" : "bg-cyan-500"}`} style={{
+    <div className="relative" title={`${votes} ${votes == 1 ? "vote" : "votes"}`}>
+      <div className={`absolute z-0 h-full rounded shadow ${isMyVote ? "bg-cyan-300" : "bg-cyan-500"}`} style={{
         width: `${percentage}%`
       }}/>
-      <p className="flex items-center gap-2.5 relative m-1.5">
-        <strong className="text-right min-w-[2.6em]">{Math.round(percentage)}%</strong>
-        <span className="mr-2" style={{
+      <p className="flex flex-wrap-reverse items-center justify-between gap-2.5 relative m-1.5">
+        <span style={{
           overflowWrap: "anywhere"
         }}>{value}</span>
-        <span className="flex gap-2.5 ml-auto">
+        <span className="inline-flex items-center gap-1">
           {isMyVote && (
-            <CheckBadgeIcon className="w-6"/>
+            <span title="My Vote"><CheckBadgeIcon className="w-6"/></span>
           )}
-          <em className="break-normal text-slate-700">{votes} vote(s)</em>
+          <strong>{Math.round(percentage)}%</strong>
         </span>
       </p>
     </div>
@@ -551,7 +550,7 @@ export default memo(function MyPoll({_id, question, author, createdAt, closed: p
         {(author?._id && user.id === author._id) && <Options _id={_id} afterDelete={afterDelete} closedState={closedState} disabled={disabledState[0]} answers={answers} isVoted={Boolean(answerVoted)}/>}
       </div>
 
-      <h1 className="text-2xl font-semibold text-cyan-800 mx-2 -mt-2">
+      <h1 className="text-2xl font-semibold text-cyan-800 -mt-2">
         {question}
       </h1>
 

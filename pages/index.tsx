@@ -22,11 +22,11 @@ export default function HomePage() {
         {user} = useUser()
 
   return (
-    <main className="grid items-center justify-center gap-8 mt-8 mx-3 mb-12">
-      <h1 className="text-5xl text-center font-semibold italic select-none drop-shadow">
+    <main className="grid items-center justify-center gap-8 mt-8 mb-12">
+      <h1 className="text-5xl text-center font-semibold italic select-none drop-shadow break-all mx-3">
         <Image src="/vercel.svg" alt="V" width={logoSize} height={logoSize}/><span className="-ml-2.5">oting</span> App
       </h1>
-      <section className="md:text-lg lg:text-xl bg-slate-100 divide-y divide-slate-400 px-3 border border-slate-400 rounded-md shadow shadow-slate-400">
+      <section className="md:text-lg lg:text-xl bg-slate-100 divide-y divide-slate-400 px-3 border border-slate-400 rounded-md shadow shadow-slate-400 mx-2">
         {
           [
             {

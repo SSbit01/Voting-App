@@ -25,9 +25,9 @@ export default function VotedPage() {
   }, [mutate])
 
   return (
-    <main className="flex flex-col items-center justify-center gap-6 mt-7 mx-3 mb-12">
-      <h1 className="text-4xl font-medium text-center italic">Voted Polls</h1>
-      <section className="flex flex-wrap items-start justify-center gap-6 w-full">
+    <main className="flex flex-col items-center justify-center gap-6 mt-7 mb-12">
+      <h1 className="text-4xl font-medium text-center italic mx-3">Voted Polls</h1>
+      <section className="flex flex-wrap items-start justify-center gap-6 mx-1">
         {error ? (
           <h1 className="flex gap-2 items-center justify-center text-3xl font-medium italic">
             ERROR<ExclamationCircleIcon className="w-8 text-red-700"/>
@@ -35,7 +35,7 @@ export default function VotedPage() {
         ) : data ? (data.length ? data.map(poll => (
           <MyPoll key={poll._id} afterDelete={afterDelete} {...poll}/>
         )) : (
-          <h2 className="text-xl text-center -mb-1">You haven&apos;t voted in any polls yet!</h2>
+          <h2 className="text-xl text-center mx-2 -mb-1">You haven&apos;t voted in any polls yet!</h2>
         )) : (
           <Spinner className="w-10 text-slate-400"/>
         )}

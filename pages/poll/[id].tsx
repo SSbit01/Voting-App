@@ -61,7 +61,7 @@ export default function PollPage(props: Omit<PollProps, "_id" | "afterDelete">) 
   }
 
   return router.query.id && (
-    <main className="flex justify-center mt-8 mx-4 mb-12">
+    <main className="flex justify-center mt-8 mx-1 mb-12">
       <MyPoll {...props} _id={Array.isArray(router.query.id) ? router.query.id[0] : router.query.id} afterDelete={returnHome}/>
     </main>
   )
