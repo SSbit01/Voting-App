@@ -311,12 +311,8 @@ const NewAnswerForm = memo(function NewAnswerForm({_id, disabledState: [disabled
   return (
     <FormProvider {...methods}>
       <form className="grid gap-2 relative" onSubmit={onSubmit}>
-        <input type="text" maxLength={answerField.maxLength} pattern={answerField.pattern.source} disabled={disabled} {...register("answer", {
+        <input type="text" maxLength={answerField.maxLength} disabled={disabled} {...register("answer", {
           maxLength: answerField.maxLength,
-          pattern: {
-            value: answerField.pattern,
-            message: answerField.patternMessage
-          },
           validate(value) {
             if (answers.some(({value: answerValue}) => answerValue == value)) {
               return "Already exists"
