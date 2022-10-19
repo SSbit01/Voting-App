@@ -17,35 +17,40 @@ export default withSessionRoute(async({method, session, body, query: {id}}, res)
       
       case "POST":
         if (typeof body?.answer === "string") {
-          try {
-            const {modifiedCount} = await Poll.updateOne({
-              _id: id,
-              closed: {$exists: false},
-              "answers.author": {$ne: session.user.id},
-              "answers.value": {$ne: body.answer}
-            }, {
-              $push: {
-                answers: {
-                  value: body.answer,
-                  votes: 1,
-                  author: session.user.id
+          body.answer = body.answer.trim()
+          if (body.answer) {
+            try {
+              const {modifiedCount} = await Poll.updateOne({
+                _id: id,
+                closed: {$exists: false},
+                "answers.author": {$ne: session.user.id},
+                "answers.value": {$ne: body.answer}
+              }, {
+                $push: {
+                  answers: {
+                    value: body.answer,
+                    votes: 1,
+                    author: session.user.id
+                  }
                 }
-              }
-            })
-            if (modifiedCount) {
-              if (!session.votes?.[id]) {
-                if (!session.votes) {
-                  session.votes = {}
+              })
+              if (modifiedCount) {
+                if (!session.votes?.[id]) {
+                  if (!session.votes) {
+                    session.votes = {}
+                  }
+                  session.votes[id] = body.answer
+                  await session.save()
                 }
-                session.votes[id] = body.answer
-                await session.save()
+                res.json({})
+              } else {
+                res.status(404).json({err: "Not Found"})
               }
-              res.json({})
-            } else {
-              res.status(404).json({err: "Not Found"})
+            } catch(err) {
+              res.status(500).json({err: "An error occurred"})
             }
-          } catch(err) {
-            res.status(500).json({err: "An error occurred"})
+          } else {
+            res.json({err: '"answer" field is empty'})
           }
         } else {
           res.json({err: '"answer" field must be a string'})

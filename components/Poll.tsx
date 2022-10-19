@@ -278,6 +278,8 @@ const NewAnswerForm = memo(function NewAnswerForm({_id, disabledState: [disabled
   const onSubmit = handleSubmit(async({answer}) => {
     setDisabled(true)
 
+    answer = answer.trim()
+
     const {err}: {err?: string} = await fetchJson(`/api/poll/${_id}`, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
