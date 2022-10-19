@@ -6,12 +6,19 @@ export default withSessionRoute(async({method, session: {user}, body}, res) => {
     switch(method) {
       case "POST":
         if (typeof body?.question === "string" && Array.isArray(body?.answers)) {
-          const {question, answers} = body
+          const {question, answers}: {
+            question: string
+            answers: string[]
+          } = body
           try {
             const {_id} = await new Poll({
               author: user.id,
-              question,
-              answers: Array.from(new Set(answers)).flatMap(value => value ? {value} : [])
+              question: question.trim(),
+              answers: Array.from(new Set(answers)).flatMap(value => {
+                value = value.trim()
+                console.log(value)
+                return value ? { value } : []
+              })
             }).save()
             res.json({id: _id.toJSON()})
           } catch {

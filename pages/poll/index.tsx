@@ -40,7 +40,7 @@ function NewPoll() {
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
         question,
-        answers: Array.from(new Set(answers.flatMap(({value}) => value || [])))
+        answers: Array.from(new Set(answers.flatMap(({value}) => value.trim() || [])))
       })
     })
 

@@ -59,11 +59,11 @@ const AnswerResult = memo(function AnswerResult({value, votes, totalVotes, isMyV
       <div className={`absolute z-0 h-full rounded shadow ${isMyVote ? "bg-cyan-300" : "bg-cyan-500"}`} style={{
         width: `${percentage}%`
       }}/>
-      <p className="flex flex-wrap-reverse items-center justify-between gap-2.5 relative m-1.5">
+      <p className="flex flex-wrap-reverse items-center justify-between gap-0.5 relative leading-tight m-1.5">
         <span style={{
           overflowWrap: "anywhere"
         }}>{value}</span>
-        <span className="inline-flex items-center gap-1">
+        <span className="inline-flex items-center gap-0.5">
           {isMyVote && (
             <span title="My Vote"><CheckBadgeIcon className="w-6"/></span>
           )}
@@ -550,7 +550,7 @@ export default memo(function MyPoll({_id, question, author, createdAt, closed: p
         {(author?._id && user.id === author._id) && <Options _id={_id} afterDelete={afterDelete} closedState={closedState} disabled={disabledState[0]} answers={answers} isVoted={Boolean(answerVoted)}/>}
       </div>
 
-      <h1 className="text-2xl font-semibold text-cyan-800 -mt-2">
+      <h1 className="text-xl font-semibold text-cyan-800 -mt-2">
         {question}
       </h1>
 

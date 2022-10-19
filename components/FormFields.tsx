@@ -89,7 +89,7 @@ export function QuestionField({required, autoFocus}: RegisterOptions & {
   autoFocus?: boolean
 }) {
   const NAME = "question",
-        {maxLength, pattern, patternMessage} = questionField,
+        {maxLength} = questionField,
         //
         {register, formState} = useFormContext(),
         {errors, isSubmitting, isSubmitSuccessful} = formState
@@ -99,10 +99,7 @@ export function QuestionField({required, autoFocus}: RegisterOptions & {
       <legend className="flex gap-1.5 px-1 italic">
         <QuestionMarkCircleIcon className="w-5 text-cyan-900"/>Question
       </legend>
-      <textarea maxLength={maxLength} autoFocus={autoFocus} placeholder="e.g. 'Where should we go?'" {...register(NAME, {required, maxLength, pattern: {
-        value: pattern,
-        message: patternMessage
-      }})}/>
+      <textarea maxLength={maxLength} autoFocus={autoFocus} placeholder="e.g. 'Where should we go?'" {...register(NAME, {required, maxLength})}/>
       <ErrorMessage
         errors={errors}
         name={NAME}
@@ -115,8 +112,7 @@ export function QuestionField({required, autoFocus}: RegisterOptions & {
 
 export function AnswersField() {
   const NAME = "answers",
-        {maxLength, pattern, patternMessage} = answerField,
-        patternSource = pattern.source,
+        {maxLength} = answerField,
         //
         {register, formState} = useFormContext(),
         {errors, isSubmitting, isSubmitSuccessful} = formState,
@@ -147,14 +143,11 @@ export function AnswersField() {
         const NAME_FIELD = `${NAME}.${i}.value` as const
         return (
           <div key={field.id} className="relative">
-            <input type="text" maxLength={maxLength} pattern={patternSource} placeholder={`e.g. Answer ${i + 1}`} className="w-full" {...register(NAME_FIELD, {maxLength, pattern: {
-              value: pattern,
-              message: patternMessage
-            }})}/>
+            <input type="text" maxLength={maxLength} placeholder={`e.g. Answer ${i + 1}`} className="w-full" {...register(NAME_FIELD, {maxLength})}/>
             <ErrorMessage
               errors={errors}
               name={NAME_FIELD}
-              render={({message}) => <p className="absolute top-0 right-0 bg-slate-900/95 text-red-600 font-bold px-2 rounded shadow">{message}</p>}
+              render={({message}) => <p className="absolute -top-2 right-0 bg-slate-900/95 text-red-600 text-sm font-bold px-2 rounded shadow">{message}</p>}
             />
           </div>
         )
