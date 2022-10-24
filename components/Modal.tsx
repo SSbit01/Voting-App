@@ -57,7 +57,7 @@ const Modal = memo(function Modal({
       leaveFrom="opacity-100"
       leaveTo="opacity-0"
     >
-      <Dialog onClose={onClose} className="fixed inset-0 z-50 bg-black/40 flex overflow-auto p-4 backdrop-blur-sm" aria-hidden="true">
+      <Dialog onClose={onClose} className="fixed inset-0 z-50 bg-black/40 flex overflow-auto pt-2 px-2.5 pb-4 backdrop-blur-sm" aria-hidden="true">
         <Transition.Child
           as={Fragment}
           enter="transition-transform duration-300"

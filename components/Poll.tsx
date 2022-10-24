@@ -59,7 +59,7 @@ const AnswerResult = memo(function AnswerResult({value, votes, totalVotes, isMyV
       <div className={`absolute z-0 h-full rounded shadow ${isMyVote ? "bg-cyan-300" : "bg-cyan-500"}`} style={{
         width: `${percentage}%`
       }}/>
-      <p className="flex flex-wrap-reverse items-center justify-between gap-0.5 relative leading-tight m-1.5">
+      <p className="flex flex-wrap-reverse items-center justify-between gap-y-0.5 gap-x-3 relative leading-tight m-1.5">
         <span style={{
           overflowWrap: "anywhere"
         }}>{value}</span>
@@ -160,9 +160,7 @@ const Options = memo(function Options({_id, afterDelete, disabled, answers, isVo
                     <button onClick={() => {
                       modal({
                         type: "alert",
-                        message: (
-                          <Results answers={answers}/>
-                        )
+                        message: <Results answers={answers}/>
                       })
                     }} className={clsx("flex items-center gap-1.5 w-full pr-3 pl-1.5 py-1 first:rounded-t last:rounded-b transition duration-150", active && "bg-sky-900")}>
                       <ChartBarIcon className="w-5"/>Results
