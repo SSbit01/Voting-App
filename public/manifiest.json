@@ -1,0 +1,21 @@
+{
+  "name": "Voting App",
+  "short_name": "VA",
+  "theme_color": "#7d1964",
+  "background_color": "#193250",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "/favicon.ico",
+      "type": "image/x-icon",
+      "sizes": "256x256"
+    }
+  ]
+}

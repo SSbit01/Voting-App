@@ -22,18 +22,16 @@ export default memo(function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-slate-900/90 bg-gradient-to-br from-slate-900 to-cyan-900 text-slate-200 backdrop-blur-sm md:px-8 sm:py-2 shadow-sm shadow-cyan-900">
+      <header className="sticky top-0 z-50 bg-slate-900/90 text-slate-200 backdrop-blur-sm md:px-8 sm:py-2 shadow-sm shadow-cyan-900">
         <div className="flex items-center justify-center max-w-screen-2xl mx-auto">
           <p className="hidden lg:block text-xl italic mr-auto">Welcome{user.id && (
             <>
-              , <Link href={userPath}>
-                  <a className={`font-semibold transition ${isUserPath ? "text-sky-400" : "hover:text-sky-200 focus:text-sky-300"}`}>
-                    {user.name}
-                  </a>
+              , <Link href={userPath} className={`font-semibold transition ${isUserPath ? "text-sky-400" : "hover:text-sky-200 focus:text-sky-300"}`}>
+                  {user.name}
                 </Link>
             </>
           )}</p>
-          <nav className="contents sm:flex sm:gap-2 pr-2 border-r border-slate-500 mr-2">
+          <nav className="contents sm:flex sm:gap-1.5 pr-2 border-r border-slate-500 mr-2">
             {[{
               href: "/",
               jsx: (
@@ -56,14 +54,12 @@ export default memo(function Navbar() {
                 </>
               )
             }] : [])].map(({href, jsx}, i) => (
-              <Link key={i} href={href}>
-                <a className={`flex-1 sm:flex-auto flex flex-col sm:flex-row items-center sm:gap-2 text-xs sm:text-lg py-2 sm:px-2 sm:rounded-lg transition ${asPath == href ? "text-sky-300 bg-slate-900/50 shadow sm:shadow-cyan-400" : "hover:text-sky-200 focus:text-sky-300"}`}>
-                  {jsx}
-                </a>
+              <Link key={i} href={href} className={`flex-1 sm:flex-auto flex flex-col sm:flex-row items-center sm:gap-1.5 text-xs sm:text-lg py-2 sm:px-2 sm:rounded-lg transition ${asPath == href ? "text-sky-300 bg-slate-900/50 shadow sm:shadow-cyan-400" : "hover:text-sky-200 focus:text-sky-300"}`}>
+                {jsx}
               </Link>
             ))}
           </nav>
-          <div className="contents sm:flex sm:gap-2">
+          <div className="contents sm:flex sm:gap-1.5">
             {!user.id && [{
               onClick() {
                 modal({type: "login"})
@@ -83,7 +79,7 @@ export default memo(function Navbar() {
                 </>
               )
             }].map(({onClick, jsx}, i) => (
-              <button key={i} type="button" onClick={onClick} className="flex-1 sm:flex-auto flex flex-col sm:flex-row items-center sm:gap-2 text-xs sm:text-lg py-2 sm:px-2 transition hover:text-sky-200 focus:text-sky-300">
+              <button key={i} type="button" onClick={onClick} className="flex-1 sm:flex-auto flex flex-col sm:flex-row items-center sm:gap-1.5 text-xs sm:text-lg py-2 sm:px-2 transition hover:text-sky-200 focus:text-sky-300">
                 {jsx}
               </button>
             ))}
@@ -91,7 +87,7 @@ export default memo(function Navbar() {
               <Menu as="div" className="flex-1 relative">
                 {({open}) => (
                   <>
-                    <Menu.Button className={`flex-1 flex flex-col sm:flex-row items-center sm:gap-2 text-xs sm:text-lg w-full p-2 sm:rounded-lg transition ${open ? "text-indigo-300 bg-slate-900/50 shadow sm:shadow-violet-400" : "hover:text-indigo-200 focus:text-indigo-300"}`}>
+                    <Menu.Button className={`flex-1 flex flex-col sm:flex-row items-center sm:gap-1.5 text-xs sm:text-lg w-full p-2 sm:rounded-lg transition ${open ? "text-indigo-300 bg-slate-900/50 shadow sm:shadow-violet-400" : "hover:text-indigo-200 focus:text-indigo-300"}`}>
                       <UserCircleIcon className="w-7"/>Profile<ChevronDownIcon className={clsx("hidden sm:inline-block w-5 transition-transform", open && "rotate-180")}/>
                     </Menu.Button>
                     <Transition
@@ -106,7 +102,7 @@ export default memo(function Navbar() {
                       <Menu.Items className="absolute right-1 origin-top-right divide-y divide-slate-500 bg-slate-900/80 backdrop-blur-sm min-w-max w-full rounded shadow mt-1">
                         <Menu.Item>
                           {({active}) => (
-                            <MyLink href={userPath} className={clsx("flex items-center gap-2 pr-3 pl-1.5 py-1 transition duration-150 rounded-t", {
+                            <MyLink href={userPath} className={clsx("flex items-center gap-1.5 pr-3 pl-1.5 py-1 transition duration-150 rounded-t", {
                               "bg-sky-900/20": active,
                               "text-sky-300": isUserPath
                             })}>
@@ -118,7 +114,7 @@ export default memo(function Navbar() {
                           {({active}) => {
                             const href = "/user"
                             return (
-                              <MyLink href={href} className={clsx("flex items-center gap-2 pr-3 pr-3 pl-1.5 py-1 transition duration-150", {
+                              <MyLink href={href} className={clsx("flex items-center gap-1.5 pr-3 pr-3 pl-1.5 py-1 transition duration-150", {
                                 "bg-slate-900": active,
                                 "text-sky-300": asPath == href
                               })}>
@@ -129,7 +125,7 @@ export default memo(function Navbar() {
                         </Menu.Item>
                         <Menu.Item>
                           {({active}) => (
-                            <button type="button" onClick={() => modal({type: "logout"})} className={clsx("flex items-center gap-2 w-full pr-3 pl-1.5 py-1 rounded-b transition duration-150", active && "bg-rose-700")}>
+                            <button type="button" onClick={() => modal({type: "logout"})} className={clsx("flex items-center gap-1.5 w-full pr-3 pl-1.5 py-1 rounded-b transition duration-150", active && "bg-rose-700")}>
                               <ArrowRightOnRectangleIcon className="w-7"/>Log Out
                             </button>
                           )}

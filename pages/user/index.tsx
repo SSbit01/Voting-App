@@ -149,15 +149,13 @@ function Settings() {
 
   return (
     <main className="relative pt-6">
-      <Link href={`/user/${user.id}`}>
-        <a title="Profile" className="transition flex items-center gap-1.5 absolute top-3 left-3 bg-cyan-800 text-white text-center font-medium px-2 py-1.5 rounded-md shadow hover:bg-cyan-700 active:scale-95 focus:bg-cyan-600 focus:shadow-cyan-500/50">
-          <ArrowLeftIcon className="w-4"/>
-          <UserCircleIcon className="w-6"/>
-          <span className="hidden md:inline-block italic">Profile</span>
-        </a>
+      <Link href={`/user/${user.id}`} title="Profile" className="transition flex items-center gap-1.5 absolute top-3 left-3 bg-cyan-800 text-white text-center font-medium px-2 py-1.5 rounded-md shadow hover:bg-cyan-700 focus:bg-cyan-600 focus:shadow-cyan-500/50">
+        <ArrowLeftIcon className="w-4"/>
+        <UserCircleIcon className="w-6"/>
+        <span className="hidden md:inline-block italic">Profile</span>
       </Link>
       <div className="max-w-lg mx-auto">
-        <h1 className="flex items-center justify-center gap-2 text-4xl font-medium italic mb-2">
+        <h1 className="flex items-center justify-center gap-1 text-4xl font-medium italic mb-2">
           <CogIcon className="w-12 text-slate-700"/>Settings
         </h1>
         <FormProvider {...methods}>

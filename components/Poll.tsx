@@ -160,7 +160,12 @@ const Options = memo(function Options({_id, afterDelete, disabled, answers, isVo
                     <button onClick={() => {
                       modal({
                         type: "alert",
-                        message: <Results answers={answers}/>
+                        message: (
+                          <>
+                            <p className="text-center text-teal-100 bg-slate-900 py-1 px-4 rounded-t-lg shadow -mt-4 -mx-4 mb-3.5">{_id}</p>
+                            <Results answers={answers}/>
+                          </>
+                        )
                       })
                     }} className={clsx("flex items-center gap-1.5 w-full pr-3 pl-1.5 py-1 first:rounded-t last:rounded-b transition duration-150", active && "bg-sky-900")}>
                       <ChartBarIcon className="w-5"/>Results
@@ -537,10 +542,8 @@ export default memo(function MyPoll({_id, question, author, createdAt, closed: p
 
       <div className="flex">
         {author?.name && (
-          <Link href={`/user/${author._id}`}>
-            <a className="transition font-medium italic underline-offset-1 hover:underline text-slate-600 focus:text-slate-800">
-              <AtSymbolIcon className="inline align-middle w-4"/>{author.name}
-            </a>
+          <Link href={`/user/${author._id}`} className="transition leading-4 font-medium italic underline-offset-1 hover:underline text-slate-600 focus:text-slate-800">
+            <AtSymbolIcon className="inline align-middle w-4"/>{author.name}
           </Link>
         )}
         {(author?._id && user.id === author._id) && <Options _id={_id} afterDelete={afterDelete} closedState={closedState} disabled={disabledState[0]} answers={answers} isVoted={Boolean(answerVoted)}/>}
@@ -558,10 +561,8 @@ export default memo(function MyPoll({_id, question, author, createdAt, closed: p
       </div>
 
       <p className="text-center bg-slate-800 rounded-b-lg p-1 -mt-1 -mb-3 -mx-3">
-        <Link href={`/poll/${_id}`}>
-          <a className="text-cyan-600 font-medium hover:underline">
-            {_id}
-          </a>
+        <Link href={`/poll/${_id}`} className="text-cyan-600 font-medium hover:underline">
+          {_id}
         </Link>
       </p>
 

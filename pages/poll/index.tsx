@@ -63,12 +63,12 @@ function NewPoll() {
   
   return (
     <main className="max-w-lg mx-auto mt-6 mb-12">
-      <h1 className="flex items-center justify-center gap-2 text-4xl font-medium italic mb-2">
+      <h1 className="flex items-center justify-center gap-1.5 text-4xl font-medium italic mb-2">
         <PlusIcon className="w-12 text-slate-700"/>New Poll
       </h1>
       <FormProvider {...methods}>
         <form onSubmit={onSubmit} className="grid gap-4	p-2">
-          <QuestionField required autoFocus/>
+          <QuestionField required />
           <AnswersField/>
           <SubmitForm>
             <span className="flex gap-2 justify-center">

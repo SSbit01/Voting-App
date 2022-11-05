@@ -42,10 +42,8 @@ const NotLoggedIn = memo(function NotLoggedIn() {
           ))}
         </div>
         <div className="pt-4">
-          <Link href="/">
-            <a className="flex items-center justify-center gap-1.5 bg-white text-cyan-700 font-semibold p-1 border border-cyan-700 rounded transition hover:bg-cyan-700 hover:text-white focus:ring-4">
-              <HomeIcon className="w-6"/>Go to Home
-            </a>
+          <Link href="/" className="flex items-center justify-center gap-1.5 bg-white text-cyan-700 font-semibold p-1 border border-cyan-700 rounded transition hover:bg-cyan-700 hover:text-white focus:ring-4">
+            <HomeIcon className="w-6"/>Go to Home
           </Link>
         </div>
       </section>

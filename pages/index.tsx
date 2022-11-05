@@ -1,8 +1,5 @@
-import Image from "next/image"
 import Link from "next/link"
-
 import {useModal} from "@/components/Context"
-
 import useUser from "@/lib/useUser"
 
 
@@ -16,17 +13,15 @@ function AccountInstruction({actionClassName = ""}) {
 
 
 export default function HomePage() {
-  const logoSize = 64,
-        actionClassName = "transition font-medium text-sky-800 cursor-pointer hover:underline",
-        //
+  const actionClassName = "transition font-medium text-sky-800 cursor-pointer hover:underline",
         {user} = useUser()
 
   return (
     <main className="grid items-center justify-center gap-8 mt-8 mb-12">
-      <h1 className="text-5xl text-center font-semibold italic select-none drop-shadow break-all mx-3">
-        <Image src="/vercel.svg" alt="V" width={logoSize} height={logoSize}/><span className="-ml-2.5">oting</span> App
+      <h1 className="text-5xl text-center font-semibold text-slate-900 italic drop-shadow break-all underline decoration-double decoration-slate-700 mx-3">
+        Voting App
       </h1>
-      <section className="md:text-lg lg:text-xl bg-slate-100 divide-y divide-slate-400 px-3 border border-slate-400 rounded-md shadow shadow-slate-400 mx-2">
+      <section className="md:text-lg lg:text-xl bg-slate-100 divide-y divide-slate-400 px-2 sm:px-3 border border-slate-400 rounded-md shadow shadow-slate-400 mx-1 sm:mx-2">
         {
           [
             {
@@ -40,7 +35,7 @@ export default function HomePage() {
                   <p>Authenticated users can create polls and share them with anyone:</p>
                   <ol role="list" className="marker:text-sky-900 marker:font-semibold list-decimal space-y-2 leading-tight pl-5 sm:pl-10 mt-2">
                     {!user.id && <AccountInstruction actionClassName={actionClassName}/>}
-                    <li>Go to the <Link href="/poll"><a className={actionClassName}>/poll</a></Link> page to create a new poll.</li>
+                    <li>Go to the <Link href="/poll" className={actionClassName}>/poll</Link> page to create a new poll.</li>
                     <li>The poll is now created, share it with your friends!</li>
                     <li>Other authenticated users can create new answers to your poll.</li>
                     <li>You can close your poll whenever you want.</li>

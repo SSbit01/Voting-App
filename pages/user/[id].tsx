@@ -123,7 +123,7 @@ export default function UserPage({_id, name, createdAt: createdAtProp}: {
         {isValidating ? (
           <Spinner className="w-10 text-slate-400"/>
         ) : polls?.at(-1)?.next && (
-          <button onClick={() => setSize(size => size + 1)} disabled={isValidating} className="transition bg-teal-800 text-slate-100 font-medium px-3 py-2 rounded-lg shadow-lg cursor-pointer hover:bg-teal-700 active:scale-95 focus:bg-teal-600 focus:shadow-cyan-500/50">Load More</button>
+          <button onClick={() => setSize(size => size + 1)} disabled={isValidating} className="transition bg-teal-800 text-slate-100 font-medium px-3 py-2 rounded-lg shadow-lg cursor-pointer hover:bg-teal-700 focus:bg-teal-600 focus:shadow-cyan-500/50">Load More</button>
         )}
       </div>
     </main>

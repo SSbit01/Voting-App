@@ -85,9 +85,7 @@ export function PasswordField({
 }
 
 
-export function QuestionField({required, autoFocus}: RegisterOptions & {
-  autoFocus?: boolean
-}) {
+export function QuestionField({required}: RegisterOptions) {
   const NAME = "question",
         {maxLength} = questionField,
         //
@@ -99,7 +97,7 @@ export function QuestionField({required, autoFocus}: RegisterOptions & {
       <legend className="flex gap-1.5 px-1 italic">
         <QuestionMarkCircleIcon className="w-5 text-cyan-900"/>Question
       </legend>
-      <textarea maxLength={maxLength} autoFocus={autoFocus} placeholder="e.g. 'Where should we go?'" {...register(NAME, {required, maxLength})}/>
+      <textarea maxLength={maxLength} placeholder="e.g. 'Where should we go?'" {...register(NAME, {required, maxLength})}/>
       <ErrorMessage
         errors={errors}
         name={NAME}
@@ -153,7 +151,7 @@ export function AnswersField() {
         )
       })}
       <div className="flex divide-x divide-slate-500 mt-1">
-        <button type="button" className="flex-1 bg-sky-800 text-white p-2 rounded-l-md shadow-lg transition enabled:cursor-pointer enabled:hover:bg-sky-700 enabled:focus:bg-sky-600 enabled:focus:shadow-cyan-500/50 disabled:bg-slate-900 disabled:text-slate-500 disabled:cursor-not-allowed" onClick={appendInput}>
+        <button type="button" className="flex-1 bg-teal-800 text-white p-2 rounded-l-md shadow-lg transition enabled:cursor-pointer enabled:hover:bg-teal-700 enabled:focus:bg-teal-600 enabled:focus:shadow-cyan-500/50 disabled:bg-slate-900 disabled:text-slate-500 disabled:cursor-not-allowed" onClick={appendInput}>
           <PlusIcon className="w-5 m-auto"/>
         </button>
         <button type="button" className="flex-1 bg-slate-800 text-white p-2 rounded-r-md shadow-lg transition enabled:cursor-pointer enabled:hover:bg-slate-700 enabled:focus:bg-slate-600 enabled:focus:shadow-cyan-900/50 disabled:bg-slate-900 disabled:text-slate-500 disabled:cursor-not-allowed" onClick={removeInput} disabled={!fields.length}>
@@ -178,7 +176,7 @@ export function SubmitForm({disabled, children}: {
         {isDirty, isValid, isSubmitting, isSubmitSuccessful} = formState
 
   return (
-    <button type="submit" disabled={!isDirty || !isValid || isSubmitting || isSubmitSuccessful || disabled} className="transition bg-sky-800 text-white text-center font-medium p-2 rounded shadow-lg enabled:cursor-pointer enabled:hover:bg-sky-700 enabled:active:scale-95 enabled:focus:bg-sky-600 enabled:focus:shadow-cyan-500/50 disabled:bg-slate-900 disabled:text-slate-500 disabled:cursor-not-allowed">
+    <button type="submit" disabled={!isDirty || !isValid || isSubmitting || isSubmitSuccessful || disabled} className="transition bg-sky-800 text-white text-center font-medium p-2 rounded shadow-lg enabled:cursor-pointer enabled:hover:bg-sky-700 enabled:focus:bg-sky-600 enabled:focus:shadow-cyan-500/50 disabled:bg-slate-900 disabled:text-slate-500 disabled:cursor-not-allowed">
       {(isSubmitting || isSubmitSuccessful) ? (
         <>
           <Spinner/>
