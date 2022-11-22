@@ -40,6 +40,6 @@
   },
   "repository": {
     "type": "git",
-    "directory": "https://github.com/SSbit01/voting-app.git"
+    "url": "https://github.com/SSbit01/voting-app.git"
   }
 }
