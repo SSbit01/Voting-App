@@ -99,7 +99,7 @@ const Results = memo(function Results({ answers, answerVoted, closedDate }: {
   
   useEffect(() => {
     if (!closedDateString && closedDate) {
-      setClosedDateString(date => date.toLocaleString())
+      setClosedDateString(closedDate.toLocaleString())
     }
   }, [closedDate, closedDateString])
 
@@ -501,18 +501,18 @@ const SelectAnswer = memo(function SelectAnswer(props: Required<Pick<PollProps, 
 
 
 
-const CreatedAt = memo(function CreatedAt({ createdAt }: {
-  createdAt: PollProps["createdAt"]
+const CreatedAt = memo(function CreatedAt({ date }: {
+  date: PollProps["createdAt"]
 }) {
-  const [createdAtString, setCreatedAtString] = useState("")  // To prevent client-server warning: `Text content did not match`
+  const [dateString, setDateString] = useState("")  // To prevent client-server warning: `Text content did not match`
 
   useEffect(() => {
-    if (!createdAtString) {
-      setCreatedAtString(date => date.toLocaleString())
+    if (!dateString) {
+      setDateString(date.toLocaleString())
     }
-  }, [createdAtString])
+  }, [date, dateString])
 
-  return <p className="italic text-sm">{createdAtString}</p>
+  return <p className="italic text-sm">{dateString}</p>
 })
 
 
@@ -569,7 +569,7 @@ export default memo(function MyPoll({ _id, question, author, createdAt, closed: 
       {(answerVoted || closedState[0]) ? <Results answers={answersState[0]} answerVoted={answerVoted} closedDate={closedState[0]} /> : <SelectAnswer _id={_id} authorId={author?._id} answersState={answersState} disabledState={disabledState} />}
 
       <div className="flex items-end justify-between mt-5 mb-4">
-        <CreatedAt createdAt={createdAt} />
+        <CreatedAt date={createdAt} />
         <ShareButton _id={_id} />
       </div>
 
