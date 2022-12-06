@@ -18,7 +18,7 @@ export default function HomePage() {
             {
               header: "What is this?",
               content: (
-                <p>This is a <a href="https://nextjs.org" target="_blank" rel="noreferrer" className={actionClassName}>Next.js</a> platform created by <a href="https://github.com/SSbit01"  target="_blank" rel="noreferrer" className={actionClassName}>SSbit01</a> where users can create polls and everyone can vote on them.</p>
+                <p>This is a <a href="https://nextjs.org" target="_blank" rel="noreferrer" className={actionClassName}>Next.js</a> platform created by <a href="https://github.com/SSbit01"  target="_blank" rel="noreferrer" className={actionClassName}>SSbit01</a> where users can create polls and everyone can vote in them.</p>
               )
             },
             {
@@ -27,9 +27,9 @@ export default function HomePage() {
                 <>
                   <p>Authenticated users can create polls and share them with anyone:</p>
                   <ol role="list" className="marker:text-teal-700 marker:font-semibold marker:italic list-decimal space-y-2 leading-tight pl-6 sm:pl-10 mt-2">
-                    {!user.id && <li><button className={actionClassName} onClick={() => modal({ type: "LogIn" })}>Log In</button> into your account, or <button className={actionClassName} onClick={() => modal({ type: "SignUp" })}>create one</button>.</li>}
+                    {!user.id && <li><button className={actionClassName} onClick={() => modal({ type: "LogIn" })}>Log in</button> to your account, or <button className={actionClassName} onClick={() => modal({ type: "SignUp" })}>create one</button>.</li>}
                     <li>Open the <button className={actionClassName} onClick={() => modal({ type: "NewPoll" })}>poll modal</button> to create a new poll.</li>
-                    <li>The poll is now created, share it with your friends!</li>
+                    <li>Once the poll is created, you can share it with anyone.</li>
                     <li>Other authenticated users can create new answers to your poll.</li>
                     <li>You can close your poll whenever you want.</li>
                   </ol>
@@ -40,7 +40,7 @@ export default function HomePage() {
               header: "Is this project Open Source?",
               content: (
                 <>
-                  <p>Yes! It&apos;s a free and open source project released under the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank" rel="noreferrer" className={actionClassName}>GPLv3 License</a>.</p>
+                  <p>Yes! It&apos;s a <em>free</em> and <em>open-source</em> project released under the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank" rel="noreferrer" className={actionClassName}>GPLv3 License</a>.</p>
                   <p className="mt-1.5">
                     <a href="https://github.com/SSbit01/voting-app" target="_blank" rel="noreferrer" className={actionClassName}>
                       <svg viewBox="0 0 16 16" className="inline-block align-sub w-5 mr-1.5" fill="currentColor" aria-hidden="true">
