@@ -1,78 +1,78 @@
-import {createContext, useReducer, useContext} from "react"
-import {Dialog} from "@headlessui/react"
+import { createContext, useReducer, useContext } from "react"
+import { Dialog } from "@headlessui/react"
 
-import {SignUp, LogIn, LogOut, Alert} from "@/components/Modal"
+import * as Modals from "@/components/Modal"
 
-import type {Dispatch, ReactNode} from "react"
-import type {ConfirmFunction} from "@/components/Modal"
-
-
-type ModalState = {
-  type?: string
-  message?: ReactNode
-  confirm?: ConfirmFunction
-}
+import type { Dispatch, ReactNode } from "react"
 
 
-const SIGNUP = "signup",
-      LOGIN = "login",
-      LOGOUT = "logout",
-      ALERT = "alert"
+type ModalAction = {
+  [key in keyof typeof Modals]: {
+    type: key
+  } & Omit<Parameters<typeof Modals[key]>[0], keyof Modals.ModalProps>
+}[keyof typeof Modals]  /* { type: "LogIn" } | {
+  type: "Alert"
+  message: string
+  confirm?: Function
+}... */
 
-export const cookieDisabledState = {
-  type: ALERT,
-  message: (
-    <Dialog.Title className="text-2xl text-center italic">
-      Cookies Are Disabled
+type ModalState = Partial<ModalAction>
+
+
+export const cookieDisabledState: ModalAction = {
+  type: "Alert",
+  children: (<>
+    <Dialog.Title className="text-2xl mb-1.5">
+      Cookies Are <strong className="text-red-700">Disabled</strong>!
     </Dialog.Title>
-  )
+
+    <Dialog.Description>
+      Make sure your cookies are <u>enabled</u> and try again
+    </Dialog.Description>
+  </>)
 }
 
 
-function modalReducer(
-  state: ModalState,
-  {type, message, confirm}: ModalState = {}
-): ModalState {
-  switch(type) {
-    case SIGNUP:
-      return navigator.cookieEnabled ? {type: SIGNUP} : {...cookieDisabledState}
-    case LOGIN:
-      return navigator.cookieEnabled ? {type: LOGIN} : {...cookieDisabledState}
-    case LOGOUT:
-      return {type: LOGOUT}
-    case ALERT:
-      return {type: ALERT, message, confirm}
-    default:
+function modalReducer(state: ModalState, action?: ModalAction): ModalState {
+
+  if (!action || !("type" in action)) {
+    if ("type" in state) {
       delete state.type
-      return {...state}
+    }
+    return { ...state }
   }
+
+  if (!navigator.cookieEnabled && ["LogIn", "SignUp"].includes(action.type)) {
+    return { ...cookieDisabledState }
+  }
+
+  return { ...action }
+  
 }
 
 
-const ModalContext = createContext<Dispatch<ModalState>>(
-  () => void 0
-)
+const ModalContext = createContext<Dispatch<ModalAction | void>>(() => void 0)
 
 
-export default function AppWrapper({children}: {
+export default function AppWrapper({ children }: {
   children: ReactNode
 }) {
+
   const [modalState, modalDispatch] = useReducer(modalReducer, {})
 
   return (
     <ModalContext.Provider value={modalDispatch}>
       {children}
-      <SignUp show={modalState.type === SIGNUP} onClose={modalDispatch}/>
-      <LogIn show={modalState.type === LOGIN} onClose={modalDispatch}/>
-      <LogOut show={modalState.type === LOGOUT} onClose={modalDispatch}/>
-      <Alert show={modalState.type === ALERT} onClose={modalDispatch} confirm={modalState.confirm}>
-        {modalState.message}
-      </Alert>
+      {Object.entries(Modals).map(([key, Modal], i) => {
+        const { type, ...rest } = modalState
+        // @ts-ignore
+        return <Modal key={i} show={type === key} onClose={modalDispatch} {...rest} />
+      })}
     </ModalContext.Provider>
   )
 }
 
 
 export function useModal() {
-  return useContext(ModalContext)
+  return useContext(ModalContext)  // const modal = useModal() -> modal({ type: "Alert", children: <p>Test</p>... })
 }

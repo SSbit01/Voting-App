@@ -1,5 +1,5 @@
 import useSWR from "swr"
-import type {UserCookie} from "@/lib/withSession"
+import type { UserCookie } from "@/lib/withSession"
 
 
 export default function useUser() {

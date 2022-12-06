@@ -1,5 +1,5 @@
 import useSWR from "swr"
-import type {VotesCookie} from "@/lib/withSession"
+import type { VotesCookie } from "@/lib/withSession"
 
 
 export default function useVotes() {

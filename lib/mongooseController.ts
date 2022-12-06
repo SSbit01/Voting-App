@@ -1,7 +1,7 @@
-import {Model, Schema, model, connect, connection} from "mongoose"
-import {hashSync, compareSync} from "bcrypt"
+import { Model, Schema, model, connect, connection } from "mongoose"
+import { hashSync, compareSync } from "bcrypt"
 
-import {nameField, passwordField, questionField, answerField} from "@/lib/attributes"
+import { nameField, passwordField, questionField, answerField } from "@/lib/attributes"
 
 import type {Types, PopulatedDoc, Document} from "mongoose"
 
@@ -71,8 +71,8 @@ if (connection.readyState === 0) {
     }
   }, {
     timestamps: true,
-    toJSON: {virtuals: true},
-    toObject: {virtuals: true}
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
   })
 
   userSchema.method("comparePassword", function(data: string | Buffer) {
@@ -131,8 +131,8 @@ if (connection.readyState === 0) {
   }, {
     versionKey: false,
     timestamps: true,
-    toJSON: {virtuals: true},
-    toObject: {virtuals: true}
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
   }))
 }
 

@@ -1,11 +1,11 @@
-import {forwardRef, Ref} from "react"
+import { forwardRef, Ref } from "react"
 import Link from "next/link"
 
-import type {AnchorHTMLAttributes} from "react"
+import type { AnchorHTMLAttributes } from "react"
 
 
 export default forwardRef(function MyLink(
-  {href, children, ...rest}: Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {href: string},
+  { href, children, ...rest }: Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & { href: string },
   ref: Ref<HTMLAnchorElement>
 ) {
   return (

@@ -1,11 +1,11 @@
 // Server
-import {isValidObjectId} from "mongoose"
+import { isValidObjectId } from "mongoose"
 
-import {withSessionSsr} from "@/lib/withSession"
-import {Poll} from "@/lib/mongooseController"
+import { withSessionSsr } from "@/lib/withSession"
+import { Poll } from "@/lib/mongooseController"
 
 
-export const getServerSideProps = withSessionSsr(async({req: {session}, params}) => {
+export const getServerSideProps = withSessionSsr(async({ req: { session }, params }) => {
   let id = params?.id
 
   if (Array.isArray(id)) {
@@ -18,11 +18,16 @@ export const getServerSideProps = withSessionSsr(async({req: {session}, params})
     }
   }
 
-  const props = await Poll.findById(id).select("-_id -answers.createdAt -answers.updatedAt -updatedAt").populate("author", "name").lean<{[key: string]: any}>()
+  const poll = await Poll.findById(id).select("-_id -answers.createdAt -answers.updatedAt -updatedAt").populate("author", "name").lean()
 
-  if (!props) {
-    if (session.votes?.[id]) {
-      delete session.votes[id]
+  if (!poll) {
+    if (session.votes) {
+      if (session.votes[id]) {
+        delete session.votes[id]
+        await session.save()
+      }
+    } else {
+      session.votes = {}
       await session.save()
     }
     return {
@@ -30,30 +35,23 @@ export const getServerSideProps = withSessionSsr(async({req: {session}, params})
     }
   }
 
-  props.author._id = props.author._id.toJSON()
-  props.createdAt = props.createdAt.toJSON()
-  if (props.closed) {
-    props.closed = props.closed.toJSON()
-  }
-  for (const answer of props.answers) {
-    if (answer.author) {
-      answer.author = answer.author.toJSON()
-    }
-  }
+  const props = JSON.parse(JSON.stringify(poll))  // Certain data types like Date or undefined need to be parsed as a string, number or null; that's why I used `JSON.parse(JSON.stringify(...))`
 
-  return {props}
+  props.key = id  // VERY IMPORTANT! PREVENTS NEXT.JS FROM NOT RE-RENDER IN THE SAME ROUTE
+
+  return { props }
 })
 
 
 
 // Client
-import {useRouter} from "next/router"
+import { useRouter } from "next/router"
 import MyPoll from "@/components/Poll"
 
-import type {PollProps} from "@/components/Poll"
+import type { PollJson } from "@/components/Poll"
 
 
-export default function PollPage(props: Omit<PollProps, "_id" | "afterDelete">) {
+export default function PollPage({ question, author, closed, answers, createdAt }: Omit<PollJson, "_id">) {
   const router = useRouter()
 
   function returnHome() {
@@ -62,7 +60,15 @@ export default function PollPage(props: Omit<PollProps, "_id" | "afterDelete">) 
 
   return router.query.id && (
     <main className="flex justify-center mt-8 mx-1 mb-12">
-      <MyPoll {...props} _id={Array.isArray(router.query.id) ? router.query.id[0] : router.query.id} afterDelete={returnHome}/>
+      <MyPoll
+        _id={Array.isArray(router.query.id) ? router.query.id[0] : router.query.id}
+        question={question}
+        author={author}
+        closed={closed ? new Date(closed) : undefined}
+        answers={answers}
+        createdAt={new Date(createdAt)}
+        afterDelete={returnHome}
+      />
     </main>
   )
 }

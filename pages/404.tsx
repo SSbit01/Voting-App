@@ -1,5 +1,5 @@
 import Link from "next/link"
-import {HomeIcon} from "@heroicons/react/24/solid"
+import { HomeIcon } from "@heroicons/react/24/solid"
 
 export default function Error404Page() {
   return (
@@ -8,8 +8,8 @@ export default function Error404Page() {
         <h1 className="text-9xl sm:pr-7 sm:border-r border-slate-400"><strong>404</strong></h1>
         <p className="text-2xl">Page Not Found</p>
       </div>
-      <Link href="/" className="flex justify-center gap-3 transition bg-teal-800 text-slate-100 text-xl font-medium p-3 rounded-lg shadow-lg cursor-pointer hover:bg-teal-700 focus:bg-teal-600 focus:shadow-cyan-500/50">
-        <HomeIcon className="w-7"/>Go to Home
+      <Link href="/" className="flex justify-center gap-3 transition bg-cyan-800 text-slate-100 text-xl font-medium p-3 rounded-lg shadow-lg cursor-pointer hover:bg-cyan-700 focus:ring-4">
+        <HomeIcon className="w-7" />Go to Home
       </Link>
     </main>
   )
