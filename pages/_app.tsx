@@ -11,13 +11,14 @@ import type { AppProps } from "next/app"
 import "@/styles/globals.css"
 
 
+
 export default function AppPage({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
         <meta charSet="UTF-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover" />
+        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
 
         <meta name="application-name" content="Voting App by SSbit01" />
         <meta name="description" content="Voting App made with Next.js created by SSbit01" />

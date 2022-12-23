@@ -3,7 +3,7 @@ import { HomeIcon } from "@heroicons/react/24/solid"
 
 export default function Error404Page() {
   return (
-    <main className="flex flex-col items-center justify-center gap-9 text-center p-5 mt-10">
+    <main className="flex flex-col items-center justify-center gap-9 text-center p-5 mt-10 mb-6">
       <div className="flex flex-col gap-6 sm:flex-row items-center justify-center">
         <h1 className="text-9xl sm:pr-7 sm:border-r border-slate-400"><strong>404</strong></h1>
         <p className="text-2xl">Page Not Found</p>

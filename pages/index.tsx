@@ -1,24 +1,26 @@
 import { useModal } from "@/components/Context"
+import Spinner from "@/components/Spinner"
+
 import useUser from "@/lib/useUser"
 
 
 export default function HomePage() {
   const actionClassName = "transition font-medium text-sky-900 hover:underline focus:text-sky-700 focus:underline",
-        { user } = useUser(),
+        { user, isLoading: isUserLoading } = useUser(),
         modal = useModal()
 
   return (
-    <main className="grid items-center justify-center gap-4 sm:gap-6 mt-6 mb-12">
+    <main className="grid items-center justify-center gap-4 sm:gap-6 mt-6 mb-8">
       <h1 className="text-4xl sm:text-5xl text-center font-semibold text-slate-900 italic drop-shadow break-all underline decoration-slate-700 mx-3">
         Voting App
       </h1>
-      <section className="md:text-lg sm:bg-slate-100 divide-y divide-slate-400 sm:px-3 sm:border border-slate-400 rounded-md sm:shadow shadow-slate-400 mx-3.5 sm:mx-2">
+      <section className="md:text-lg sm:bg-slate-100/75 divide-y divide-slate-400 sm:px-3 sm:border border-slate-400 rounded-md sm:shadow shadow-slate-400 mx-3.5 sm:mx-2">
         {
           [
             {
               header: "What is this?",
               content: (
-                <p>This is a <a href="https://nextjs.org" target="_blank" rel="noreferrer" className={actionClassName}>Next.js</a> platform created by <a href="https://github.com/SSbit01"  target="_blank" rel="noreferrer" className={actionClassName}>SSbit01</a> where users can create polls and everyone can vote in them.</p>
+                <p>This is a <a href="https://nextjs.org" target="_blank" rel="noreferrer" className={actionClassName}>Next.js</a> platform created by <a href="https://ssbit01.github.io/"  target="_blank" rel="noreferrer" className={actionClassName}>SSbit01</a> where users can create polls and everyone can vote in them.</p>
               )
             },
             {
@@ -27,7 +29,11 @@ export default function HomePage() {
                 <>
                   <p>Authenticated users can create polls and share them with anyone:</p>
                   <ol role="list" className="marker:text-teal-700 marker:font-semibold marker:italic list-decimal space-y-2 leading-tight pl-6 sm:pl-10 mt-2">
-                    {!user.id && <li><button className={actionClassName} onClick={() => modal({ type: "LogIn" })}>Log in</button> to your account, or <button className={actionClassName} onClick={() => modal({ type: "SignUp" })}>create one</button>.</li>}
+                    {isUserLoading ? (
+                      <li><Spinner /></li>
+                    ) : (
+                      !user.id && <li><button className={actionClassName} onClick={() => modal({ type: "LogIn" })}>Log in</button> to your account, or <button className={actionClassName} onClick={() => modal({ type: "SignUp" })}>create one</button>.</li>
+                    )}
                     <li>Open the <button className={actionClassName} onClick={() => modal({ type: "NewPoll" })}>poll modal</button> to create a new poll.</li>
                     <li>Once the poll is created, you can share it with anyone.</li>
                     <li>Other authenticated users can create new answers to your poll.</li>

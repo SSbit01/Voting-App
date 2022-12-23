@@ -129,11 +129,11 @@ export default function UserPage({ _id, name, createdAt: createdAtProp }: {
   return (
     <main className="relative mt-6 mb-12">
       <section className="flex flex-col items-center gap-4 text-center mx-3">
-        <h1 className="text-3xl sm:text-4xl leading-7 font-medium italic break-all">
+        <h1 className="text-3xl text-slate-700 sm:text-4xl leading-7 font-medium italic break-all">
           @{name}
         </h1>
-        <p>
-          <CalendarDaysIcon className="inline align-top w-6 mr-2" />Joined {createdAt}
+        <p className="text-slate-600">
+          <CalendarDaysIcon className="inline align-top w-6 mr-2" />Joined <time>{createdAt}</time>
         </p>
       </section>
       <section className="flex flex-col items-center gap-5 mx-1 mt-6">

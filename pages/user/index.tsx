@@ -66,7 +66,7 @@ const Settings = memo(function Settings() {
           ...user,
           name
         })
-        reset({name, password: ""})
+        reset({ name, password: "" })
       }
       modal({ type: "Alert", children: (
         <Dialog.Title className="flex flex-wrap items-center justify-center gap-x-1.5 text-2xl text-center">

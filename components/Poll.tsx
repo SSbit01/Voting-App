@@ -1,3 +1,6 @@
+//  TODO: SIMPLIFY STRUCTURE: USE MULTIPLE CONTEXTS
+
+
 import { memo, useState, useEffect, useMemo, useCallback, Fragment } from "react"
 import Link from "next/link"
 import clsx from "clsx"
@@ -13,6 +16,7 @@ import useVotes from "@/lib/useVotes"
 import fetchJson from "@/lib/fetchJson"
 import { answerField } from "@/lib/attributes"
 
+import Spinner from "@/components/Spinner"
 import { cookieDisabledState, useModal } from "@/components/Context"
 import { SubmitForm } from "@/components/FormFields"
 
@@ -67,12 +71,12 @@ const AnswerResult = memo(function AnswerResult({ value, votes, totalVotes, isMy
 
   // USE OF ::before TO REPRESENT THE PERCENTAGE
   return (
-    <div className={`before:block before:absolute before:top-0 before:bottom-0 before:left-0 before:w-[var(--percentage)] before:z-[-1] before:shadow before:rounded flex flex-wrap-reverse items-center gap-x-2.5 relative p-1.5  ${isMyVote ? "before:bg-cyan-300" : "before:bg-cyan-500"}`} title={`${votes} ${votes == 1 ? "vote" : "votes"}`} style={{
+    <div className={`before:absolute before:top-0 before:bottom-0 before:left-0 before:w-[var(--percentage)] before:z-[-1] before:shadow before:rounded before:animate-bar flex flex-wrap-reverse items-center gap-x-2.5 relative p-1.5  ${isMyVote ? "before:bg-cyan-300" : "before:bg-cyan-500"}`} title={`${votes} ${votes == 1 ? "vote" : "votes"}`} style={{
       "--percentage": percentage + "%",
       overflowWrap: "anywhere"  // WORD BREAK
     } as ResultCSS}>
-      <span className="leading-5 mr-auto">{value}</span>
-      <div className="flex items-center gap-1">
+      <span className="leading-5">{value}</span>
+      <div className="flex items-center gap-1 ml-auto">
         {isMyVote && (
           <CheckBadgeIcon title="My Vote" className="w-5 text-slate-600" />
         )}
@@ -151,7 +155,7 @@ const Options = memo(function Options({ _id, afterDelete, disabled, answers, clo
   const API = `/api/poll/${_id}`,
         modal = useModal(),
         //
-        { myVotes } = useVotes(),
+        { myVotes, isLoading: areVotesLoading } = useVotes(),
         //
         areThereAnswers = !!answers?.length  // To prevent 0
 
@@ -172,7 +176,7 @@ const Options = memo(function Options({ _id, afterDelete, disabled, answers, clo
             leaveTo="scale-95 opacity-0"
           >
             <Menu.Items className="absolute right-0 origin-top-right divide-y divide-slate-500 bg-slate-900/75 text-slate-200 backdrop-blur-sm min-w-max w-full rounded shadow">
-              {(areThereAnswers && !closedDate && !(_id in myVotes)) && (
+              {(areThereAnswers && !closedDate && !areVotesLoading && !(_id in myVotes)) && (
                 <Menu.Item>
                   {({ active }) => (
                     <button onClick={() => {
@@ -242,29 +246,29 @@ const Options = memo(function Options({ _id, afterDelete, disabled, answers, clo
                   <button onClick={() => {
                     modal({
                       type: "Alert",
-                      children: (
-                        <>
-                          <p className="text-center text-teal-100 bg-slate-900 py-1 px-4 rounded-t-lg shadow -mt-3 -mx-3 mb-2.5">{_id}</p>
-                          <Dialog.Title className="text-xl sm:text-2xl text-center">
-                            Are you sure you want to <strong className="text-red-700">delete this poll</strong>?
-                          </Dialog.Title>
-                        </>
-                      ),
+                      children: (<>
+                        <p className="text-center text-teal-100 bg-slate-900 py-1 px-4 rounded-t-lg shadow -mt-3 -mx-3 mb-2.5">{_id}</p>
+                        <Dialog.Title className="text-xl sm:text-2xl text-center">
+                          Are you sure you want to <strong className="text-red-700">delete this poll</strong>?
+                        </Dialog.Title>
+                      </>),
                       async confirm() {
                         const { err }: { err?: string } = await fetchJson(API, {method: "DELETE"})
                         if (err) {
-                          return () => modal({ type: "Alert", children: (
+                          return () => modal({ type: "Alert", children: (<>
+                            <p className="text-center text-teal-100 bg-slate-900 py-1 px-4 rounded-t-lg shadow -mt-3 -mx-3 mb-2.5">{_id}</p>
                             <Dialog.Title className="text-2xl text-center">
                               {err}
                             </Dialog.Title>
-                          )})
+                          </>) })
                         }
                         afterDelete?.(_id)
-                        return () => modal({ type: "Alert", children: (
+                        return () => modal({ type: "Alert", children: (<>
+                          <p className="text-center text-teal-100 bg-slate-900 py-1 px-4 rounded-t-lg shadow -mt-3 -mx-3 mb-2.5">{_id}</p>
                           <Dialog.Title className="text-2xl text-center">
                             The poll has been <strong className="text-red-700">deleted</strong>
                           </Dialog.Title>
-                        )})
+                        </>) })
                       }
                     })
                   }} className={clsx("flex items-center gap-1.5 w-full pr-3 pl-1.5 py-1 first:rounded-t last:rounded-b transition duration-150", active && "bg-rose-700")}>
@@ -287,7 +291,7 @@ const NewAnswerForm = memo(function NewAnswerForm({ _id, disabledState: [disable
   answersState: AnswersState
 }) {
   const { user } = useUser(),
-        { mutateVotes } = useVotes(),
+        { mutateVotes, isLoading: areVotesLoading } = useVotes(),
         //
         modal = useModal(),
         //
@@ -349,7 +353,7 @@ const NewAnswerForm = memo(function NewAnswerForm({ _id, disabledState: [disable
           name="answer"
           render={({message}) => <p className="absolute -top-2.5 right-2 text-sm bg-slate-900/90 backdrop-blur-sm text-red-600 font-bold px-2 rounded shadow">{message}</p>}
         />
-        <SubmitForm disabled={disabled}>
+        <SubmitForm disabled={disabled || areVotesLoading}>
           <span className="flex gap-1.5 items-center justify-center">
             Submit New Answer<PaperAirplaneIcon className="w-5" />
           </span>
@@ -421,9 +425,9 @@ const SelectAnswer = memo(function SelectAnswer(props: Required<Pick<PollProps, 
   const { authorId, ...restProps } = props,
         { _id, answersState: [answers, setAnswers], disabledState: [disabled, setDisabled] } = restProps,
         //
-        { mutateVotes } = useVotes(),
+        { mutateVotes, isLoading: areVotesLoading } = useVotes(),
         //
-        { user } = useUser(),
+        { user, isLoading: isUserLoading } = useUser(),
         modal = useModal(),
         //
         originalAnswers = useMemo(() => answers.filter(({ author }) => !author), [answers]),
@@ -471,7 +475,7 @@ const SelectAnswer = memo(function SelectAnswer(props: Required<Pick<PollProps, 
   return (
     <div className="grid gap-3">
       {Boolean(originalAnswers.length) && (
-        <fieldset disabled={disabled} className="pt-2 px-1.5 pb-1.5 border border-cyan-600 rounded">
+        <fieldset disabled={disabled || areVotesLoading} className="pt-2 px-1.5 pb-1.5 border border-cyan-600 rounded">
           <legend className="flex gap-1 px-1 -mb-1 italic">
             <CursorArrowRaysIcon className="w-5 text-cyan-900" />Original Answers
           </legend>
@@ -480,7 +484,7 @@ const SelectAnswer = memo(function SelectAnswer(props: Required<Pick<PollProps, 
           </div>
         </fieldset>
       )}
-      <fieldset disabled={disabled} className="pt-2 px-1.5 pb-1.5 border border-cyan-600 rounded empty:hidden">
+      <fieldset disabled={disabled || areVotesLoading} className="pt-2 px-1.5 pb-1.5 border border-cyan-600 rounded empty:hidden">
         <legend className="flex gap-1 px-1 -mb-1 italic cursor-help" title="These answers were added by other users">
           <CursorArrowRaysIcon className="w-5 text-cyan-900" />Extra Answers
         </legend>
@@ -488,11 +492,14 @@ const SelectAnswer = memo(function SelectAnswer(props: Required<Pick<PollProps, 
           {extraAnswers.map(renderAnswerButton)}
         </div>
         {
+          isUserLoading ?
+          <Spinner className="w-6 text-slate-300 m-auto" /> :
           user.id ? (
             authorId === user.id ? (                                                
               <p className="font-light text-center">Authors cannot create new answers</p>
             ) : <NewAnswerForm {...restProps} />
-          ) : <NotLoggedIn />
+          ) :
+          <NotLoggedIn />
         }
       </fieldset>
     </div>
@@ -544,7 +551,7 @@ export default memo(function MyPoll({ _id, question, author, createdAt, closed: 
         closedState = useState(closedProp),
         answersState = useState(answersProp),
         //
-        { user } = useUser(),
+        { user, isLoading: isUserLoading } = useUser(),
         { myVotes } = useVotes(),
         //
         answerCreatedByUser = useMemo(() => (user?.id && answersState[0].find(({ author: authorId }) => authorId == user.id)?.value), [user, answersState]),
@@ -552,7 +559,7 @@ export default memo(function MyPoll({ _id, question, author, createdAt, closed: 
 
   
   return (
-    <article title={closedState[0] ? "Closed" : undefined} className="relative z-0 max-w-2xl bg-slate-50 w-full p-3 border border-slate-400 rounded-lg shadow-md" style={{
+    <article title={closedState[0] ? "Closed" : undefined} className="relative z-0 max-w-2xl bg-slate-50/80 w-full p-3 border border-slate-400 rounded-lg shadow-md" style={{
       overflowWrap: "anywhere"  // WORD BREAK
     }}>
 
@@ -560,7 +567,9 @@ export default memo(function MyPoll({ _id, question, author, createdAt, closed: 
         @{author.name}
       </Link>
 
-      {(author?._id && user.id === author._id) && <Options _id={_id} afterDelete={afterDelete} closedState={closedState} disabled={disabledState[0]} answers={answersState[0]} />}
+      {isUserLoading ? <Spinner className="absolute top-2 right-3 text-slate-400 w-5 mx-auto" /> :
+        (author?._id && user.id === author._id) && <Options _id={_id} afterDelete={afterDelete} closedState={closedState} disabled={disabledState[0]} answers={answersState[0]} />
+      }
 
       <h1 className="text-xl font-semibold text-cyan-800 mt-1 mb-3">
         {question}
@@ -578,7 +587,7 @@ export default memo(function MyPoll({ _id, question, author, createdAt, closed: 
       </Link>
 
       {closedState[0] && (
-        <LockClosedIcon className="absolute top-0 right-0 z-[-2] max-h-[85%] text-slate-200 drop-shadow-md" />
+        <LockClosedIcon className="absolute top-0 right-0 z-[-2] max-h-[85%] text-slate-300 drop-shadow-md" />
       )}
 
     </article>

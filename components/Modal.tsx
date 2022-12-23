@@ -86,16 +86,6 @@ function Modal({
 
 
 
-export const IsLoading = memo(function IsLoading({ show }: ModalProps) {
-  return (
-    <Modal show={show} className="m-auto" onClose={() => void 0}>
-      <Spinner className="w-10 text-slate-300" />
-    </Modal>
-  )
-})
-
-
-
 export const Alert = memo(function Alert({ show, onClose, children, confirm }: ModalProps & {
   children: ReactNode
   confirm?: ConfirmFunction
@@ -261,7 +251,7 @@ export const SignUp = memo(function SignUp({ show, onClose }: ModalProps) {
 
 
   return (
-    <Modal show={show} onClose={closeModal} afterLeave={reset} className="relative bg-slate-200/80 w-full max-w-sm p-3 sm:p-4 rounded-lg border border-slate-500 shadow m-auto">
+    <Modal show={show} onClose={closeModal} afterLeave={reset} className="relative bg-slate-200/80 w-full max-w-sm p-3 sm:p-4 rounded-lg border border-slate-500 shadow mt-2 md:mt-auto mx-auto mb-auto">
 
       <Dialog.Title className="text-3xl text-center font-bold italic text-slate-700 mb-2.5">Sign Up</Dialog.Title>
 
@@ -347,7 +337,7 @@ export const LogIn = memo(function LogInModal({ show, onClose }: ModalProps) {
 
 
   return (
-    <Modal show={show} onClose={closeModal} afterLeave={reset} className="relative bg-slate-200/80 w-full max-w-sm p-3 sm:p-4 rounded-lg border border-slate-500 shadow m-auto">
+    <Modal show={show} onClose={closeModal} afterLeave={reset} className="relative bg-slate-200/80 w-full max-w-sm p-3 sm:p-4 rounded-lg border border-slate-500 shadow mt-2 md:mt-auto mx-auto mb-auto">
 
       <Dialog.Title className="text-3xl text-center font-bold italic text-slate-700 mb-2.5">Log In</Dialog.Title>
 
@@ -500,10 +490,10 @@ const NewPollModal = memo(function NewPollModal({ show, onClose }: ModalProps) {
 
 
 export function NewPoll({ show, onClose }: ModalProps) {
-  const { user } = useUser()
+  const { user, isLoading: isUserLoading } = useUser()
 
 
-  return user.id ? (
+  return !isUserLoading ? (user.id ? (
     <NewPollModal show={show} onClose={onClose} />
   ) : (
     <NotLoggedInModal show={show} onClose={onClose}>
@@ -511,5 +501,5 @@ export function NewPoll({ show, onClose }: ModalProps) {
         You must be <strong className="text-teal-900">logged in</strong> to create a new poll
       </Dialog.Title>
     </NotLoggedInModal>
-  )
+  )) : null
 }
