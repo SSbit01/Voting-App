@@ -1,6 +1,6 @@
 # Voting App
 
-This is a [Next.js](https://nextjs.org) platform created by [SSbit01](https://github.com/SSbit01) where users can create polls and everyone can vote on them.
+This is a [Next.js](https://nextjs.org) platform created by [SSbit01](https://github.com/SSbit01) where users can create polls and everyone can vote in them.
 
 ---
 

@@ -46,10 +46,10 @@ export default memo(function Navbar() {
   
 
   return (
-    <header className={clsx("sticky top-0 z-50 bg-slate-900/90 text-slate-200 backdrop-blur-sm md:px-8 sm:py-2 shadow-sm shadow-cyan-900 after:absolute after:-bottom-1 after:left-0 after:h-1 after:bg-blue-500 after:shadow after:z-[-1] after:duration-150", {
+    <header className={clsx("sticky top-0 z-50 bg-slate-900/90 text-slate-200 backdrop-blur-sm md:px-8 sm:py-2 shadow-sm shadow-cyan-900 after:absolute after:-bottom-1 after:left-0 after:h-1 after:bg-blue-500 after:shadow after:z-[-1] after:transition-[width]", {
       "after:w-1/3": isRouteLoading,
       "after:w-2/3": !isRouteLoading && isUserLoading,
-      "after:w-full after:opacity-0": !isRouteLoading && !isUserLoading
+      "after:w-full after:hidden": !isRouteLoading && !isUserLoading
     })}>
       <div className="flex items-center justify-center max-w-screen-2xl mx-auto">
         <p className="hidden lg:block text-xl italic mr-auto">Welcome{user.id && (
