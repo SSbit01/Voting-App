@@ -139,7 +139,7 @@ export default memo(function Navbar() {
                   >
                     <Menu.Items className="absolute right-1 origin-top-right divide-y divide-slate-500 bg-slate-900/80 backdrop-blur-sm min-w-max w-full rounded shadow mt-0.5 sm:mt-1">
                       <Menu.Item>
-                        {({active}) => (
+                        {({ active }) => (
                           <MyLink href={userPath} className={clsx("flex items-center gap-1.5 pr-3 pl-1.5 py-1 transition duration-150 rounded-t", {
                             "bg-sky-900/40": active,
                             "text-sky-300": isUserPath
@@ -149,7 +149,7 @@ export default memo(function Navbar() {
                         )}
                       </Menu.Item>
                       <Menu.Item>
-                        {({active}) => {
+                        {({ active }) => {
                           const href = "/user"
                           return (
                             <MyLink href={href} className={clsx("flex items-center gap-1.5 pr-3 pr-3 pl-1.5 py-1 transition duration-150", {
@@ -162,7 +162,7 @@ export default memo(function Navbar() {
                         }}
                       </Menu.Item>
                       <Menu.Item>
-                        {({active}) => (
+                        {({ active }) => (
                           <button type="button" onClick={() => modal({ type: "LogOut" })} className={clsx("flex items-center gap-1.5 w-full pr-3 pl-1.5 py-1 rounded-b transition duration-150", active && "bg-rose-700")}>
                             <ArrowRightOnRectangleIcon className="w-7" />Log Out
                           </button>
