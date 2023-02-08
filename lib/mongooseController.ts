@@ -51,11 +51,11 @@ const MODEL_NAME = {
 
 
 if (connection.readyState === 0) {
-  if (!process.env.MONGO_URI) {
-    throw "MONGO_URI environment variable is not defined!"
+  if (!process.env.MONGODB_URI) {
+    throw "MONGODB_URI environment variable is not defined!"
   }
   
-  connect(process.env.MONGO_URI)
+  connect(process.env.MONGODB_URI)
   
   const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     name: {
