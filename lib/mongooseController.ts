@@ -3,7 +3,7 @@ import { hashSync, compareSync } from "bcrypt"
 
 import { nameField, passwordField, questionField, answerField } from "@/lib/attributes"
 
-import type {Types, PopulatedDoc, Document} from "mongoose"
+import type { Types, PopulatedDoc, Document } from "mongoose"
 
 
 
