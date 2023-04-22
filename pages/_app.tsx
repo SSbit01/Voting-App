@@ -13,29 +13,43 @@ import "@/styles/globals.css"
 
 
 export default function AppPage({ Component, pageProps }: AppProps) {
+
+  const title = "Voting App by SSbit01",
+        description = "A Next.js platform where users can create polls and everyone can vote in them",
+        themeColor = "#193250"
+
+
   return (
     <>
       <Head>
-        <meta charSet="UTF-8" />
-        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
 
-        <meta name="application-name" content="Voting App by SSbit01" />
-        <meta name="description" content="Voting App made with Next.js created by SSbit01" />
+        <title>{title}</title>
+
+        <meta name="application-name" content={title} />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content={title}/>
+        <meta name="description" content={description} />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="theme-color" content="#1a4087" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
+        <meta name="msapplication-TileColor" content={themeColor} />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="theme-color" content={themeColor} />
 
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Voting App by SSbit01" />
-        <meta property="og:description" content="Voting App made with Next.js created by SSbit01" />
-        <meta property="og:site_name" content="Voting App" />
-
-        <link rel="mask-icon" href="/icon.svg" color="#19327d"/>
-        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/manifest.json" />
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color={themeColor} />
+        <link rel="shortcut icon" href="/favicon.ico" />
 
-        <title>Voting App by SSbit01</title>
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+
       </Head>
+
+
       <SWRConfig value={{
         fetcher,
         onError(err) {
@@ -43,8 +57,11 @@ export default function AppPage({ Component, pageProps }: AppProps) {
         }
       }}>
         <AppWrapper>
+
           <NavBar />
+
           <Component {...pageProps} />
+
         </AppWrapper>
       </SWRConfig>
     </>
