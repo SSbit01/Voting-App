@@ -46,7 +46,7 @@ export default function HomePage() {
               header: "Is this project Open Source?",
               content: (
                 <>
-                  <p>Yes! It&apos;s a <em>free</em> and <em>open-source</em> project released under the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank" rel="noreferrer" className={actionClassName}>GPLv3 License</a>.</p>
+                  <p>Yes! It&apos;s a <em>free</em> and <em>open-source</em> project released under the <a href="https://www.gnu.org/licenses/agpl-3.0.en.html" target="_blank" rel="noreferrer" className={actionClassName}>GNU AGPL License</a>.</p>
                   <p className="mt-1.5">
                     <a href="https://github.com/SSbit01/voting-app" target="_blank" rel="noreferrer" className={actionClassName}>
                       <svg viewBox="0 0 16 16" className="inline-block align-sub w-5 mr-1.5" fill="currentColor" aria-hidden="true">
