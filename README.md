@@ -42,7 +42,8 @@ This project works like any other [Next.js](https://nextjs.org/) project. The fo
 ## To Do
 
 - ***GLOBAL***
-  - Solve the vulnerabilities
+  - Solve the vulnerabilities and known issues
+  - Hash the password on the client side and send the result to the server to verify it. Doing this the server doesn't know the user's password.
   - Try to cache *SWR* results in `localStorage`. See [Persistent Cache](https://swr.vercel.app/docs/advanced/cache#localstorage-based-persistent-cache)
 - `/components/Poll.tsx`
   - **Simplify Structure**: use multiple contexts
