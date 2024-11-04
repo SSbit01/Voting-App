@@ -61,7 +61,7 @@ export default function HomePage() {
               content: (
                 <>
                   <p>This project has many <strong className="text-red-600">vulnerabilities</strong> and <strong className="text-red-600">issues</strong>. Please use it for simple tasks.</p>
-                  <p><a href="https://github.com/SSbit01/voting-app?tab=readme-ov-file#known-issues" target="_blank" rel="noreferrer" className={actionClassName}>Read more about this</a></p>
+                  <p><a href="https://github.com/SSbit01/voting-app?tab=readme-ov-file#vulnerabilities" target="_blank" rel="noreferrer" className={actionClassName}>Read more about this</a></p>
                 </>
               )
             }
