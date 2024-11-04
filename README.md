@@ -34,7 +34,6 @@ This project works like any other [Next.js](https://nextjs.org/) project. The fo
 ## Vulnerabilities
 
 - User ID is exposed to the client.
-- Someone could modify the httpOnly cookie to impersonate another user.
 
 ## Known issues
 - The user name is stored in the cookie but it doesn't get updated if another session changes it.
