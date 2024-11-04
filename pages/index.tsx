@@ -11,9 +11,7 @@ export default function HomePage() {
 
   return (
     <main className="grid items-center justify-center gap-4 sm:gap-6 mt-6 mb-8">
-      <h1 className="text-4xl sm:text-5xl text-center font-semibold text-slate-900 italic drop-shadow break-all underline decoration-slate-700 mx-3">
-        Voting App
-      </h1>
+      <h1 className="text-4xl sm:text-5xl text-center font-semibold text-slate-900 italic drop-shadow break-all underline decoration-slate-700 mx-3">Voting App</h1>
       <section className="md:text-lg sm:bg-slate-100/75 divide-y divide-slate-400 sm:px-3 sm:border border-slate-400 rounded-md sm:shadow shadow-slate-400 mx-3.5 sm:mx-2">
         {
           [
@@ -55,6 +53,15 @@ export default function HomePage() {
                       Repository
                     </a>
                   </p>
+                </>
+              )
+            },
+            {
+              header: "Note",
+              content: (
+                <>
+                  <p>This project has many <strong className="text-red-600">vulnerabilities</strong> and <strong className="text-red-600">issues</strong>. Please use it for simple tasks.</p>
+                  <p><a href="https://github.com/SSbit01/voting-app?tab=readme-ov-file#known-issues" target="_blank" rel="noreferrer" className={actionClassName}>Read more about this</a></p>
                 </>
               )
             }

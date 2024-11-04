@@ -2,6 +2,9 @@
 
 This is a [Next.js](https://nextjs.org) platform created by [SSbit01](https://github.com/SSbit01) where users can create polls and everyone can vote in them. It uses a **MongoDB Atlas** database to store users and polls.
 
+### NOTE
+This platform has many **security vulnerabilities**. This is just a simple personal project that was made a long time ago. Please use it for simple tasks. [Go to vulnerabilities](#vulnerabilities).
+
 ---
 
 ## Required environment variables
@@ -28,11 +31,22 @@ This project works like any other [Next.js](https://nextjs.org/) project. The fo
 
 ---
 
+## Vulnerabilities
+
+- User ID is exposed to the client.
+- Someone could modify the httpOnly cookie to impersonate another user.
+
+## Known issues
+- The user name is stored in the cookie but it doesn't get updated if another session changes it.
+
 ## To Do
 
 - ***GLOBAL***
+  - Solve the vulnerabilities
   - Try to cache *SWR* results in `localStorage`. See [Persistent Cache](https://swr.vercel.app/docs/advanced/cache#localstorage-based-persistent-cache)
 - `/components/Poll.tsx`
   - **Simplify Structure**: use multiple contexts
 - `/pages/api/voted.ts`
   - Sort the results according to when each vote was added, not by poll id
+- `/pages/api/user/[id].ts`
+  - Remove this path. Replace it with just `/pages/api/user`
